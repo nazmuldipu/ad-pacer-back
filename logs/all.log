@@ -1,0 +1,14 @@
+2022-05-12 12:27:46:2746 [37mdebug[39m: [37mListening on http://localhost:5432 ...[39m
+2022-05-12 12:29:43:2943 [37mdebug[39m: [37mListening on http://localhost:5432 ...[39m
+2022-05-12 12:33:46:3346 [37mdebug[39m: [37mListening on http://localhost:5432 ...[39m
+2022-05-12 12:33:56:3356 [32minfo[39m: [32mserver.handler.begun[39m
+2022-05-12 12:34:34:3434 [32minfo[39m: [32mserver.handler.begun[39m
+2022-05-12 12:34:34:3434 [32minfo[39m: [32mserver.handler.failed[39m
+2022-05-12 12:35:01:351 [37mdebug[39m: [37mListening on http://localhost:5432 ...[39m
+2022-05-12 12:35:03:353 [32minfo[39m: [32mserver.handler.begun[39m
+2022-05-12 12:35:03:353 [31merror[39m: [31mserver.handler.failed[39m
+2022-05-12 12:51:13:5113 [37mdebug[39m: [37mListening on http://localhost:5432 ...[39m
+2022-05-12 12:51:24:5124 [37mdebug[39m: [37mListening on http://localhost:5432 ...[39m
+2022-05-12 13:18:49:1849 [37mdebug[39m: [37mListening on http://localhost:5432 ...[39m
+2022-05-12 13:19:31:1931 [37mdebug[39m: [37mListening on http://localhost:5432 ...[39m
+2022-05-12 13:25:41:2541 [37mdebug[39m: [37mListening on http://localhost:5432 ...[39m
