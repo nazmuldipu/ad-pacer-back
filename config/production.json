@@ -4,5 +4,6 @@
     "database": "within_db",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "HTTP_SERVER_PORT": 5432
+    "port": 5432,
+    "HTTP_SERVER_PORT": 3030
 }
