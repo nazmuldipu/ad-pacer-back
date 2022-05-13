@@ -47,16 +47,15 @@ class UsersDao {
     patchUserById(user) {
         return __awaiter(this, void 0, void 0, function* () {
             const objIndex = this.users.findIndex((obj) => obj.id === user.id);
-            let currentUser = this.users[objIndex];
+            const currentUser = this.users[objIndex];
             const allowedPatchFields = [
                 "password",
                 "firstName",
                 "lastName",
                 "permissionLevel",
             ];
-            for (let field of allowedPatchFields) {
+            for (const field of allowedPatchFields) {
                 if (field in user) {
-                    // @ts-ignore
                     currentUser[field] = user[field];
                 }
             }
@@ -74,7 +73,7 @@ class UsersDao {
     getUserByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
             const objIndex = this.users.findIndex((obj) => obj.email === email);
-            let currentUser = this.users[objIndex];
+            const currentUser = this.users[objIndex];
             if (currentUser) {
                 return currentUser;
             }

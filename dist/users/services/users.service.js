@@ -26,6 +26,7 @@ class UsersService {
     }
     list(limit, page) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log('limit', limit, 'page', page);
             return users_dao_1.default.getUsers();
         });
     }

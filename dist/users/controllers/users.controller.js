@@ -42,20 +42,20 @@ class UsersController {
                 req.body.password = "1ag4alkaaljf"; //await argon2.hash(req.body.password);
             }
             log(yield users_service_1.default.patchById(req.body));
-            res.status(204).send(``);
+            res.status(204).send("");
         });
     }
     put(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             req.body.password = "1ag4alkaaljf"; //await argon2.hash(req.body.password);
             log(yield users_service_1.default.updateById(Object.assign({ id: req.params.userId }, req.body)));
-            res.status(204).send(``);
+            res.status(204).send("");
         });
     }
     removeUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             log(yield users_service_1.default.deleteById(req.params.userId));
-            res.status(204).send(``);
+            res.status(204).send("");
         });
     }
 }

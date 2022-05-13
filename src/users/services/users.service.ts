@@ -11,8 +11,8 @@ class UsersService implements CRUD {
 		return UsersDao.removeUserById(resourceId);
 	}
 
-	// async list(limit: number, page: number) {
-	async list() {
+	async list(limit: number, page: number) {
+		console.log('limit', limit, 'page', page);
 		return UsersDao.getUsers();
 	}
 

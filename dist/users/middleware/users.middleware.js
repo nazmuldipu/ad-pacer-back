@@ -35,7 +35,7 @@ class UsersMiddleware {
             }
             else {
                 res.status(400).send({
-                    error: `Missing required fields email and password`,
+                    error: "Missing required fields email and password",
                 });
             }
         });
@@ -44,7 +44,7 @@ class UsersMiddleware {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield users_service_1.default.getUserByEmail(req.body.email);
             if (user) {
-                res.status(400).send({ error: `User email already exists` });
+                res.status(400).send({ error: "User email already exists" });
             }
             else {
                 next();
@@ -58,7 +58,7 @@ class UsersMiddleware {
                 next();
             }
             else {
-                res.status(400).send({ error: `Invalid email` });
+                res.status(400).send({ error: "Invalid email" });
             }
         });
     }
