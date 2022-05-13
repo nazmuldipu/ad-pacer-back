@@ -31,7 +31,6 @@ class UsersController {
     }
     createUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log('abc', req);
             req.body.password = "1ag4alkaaljf"; //await argon2.hash(req.body.password);
             const userId = yield users_service_1.default.create(req.body);
             res.status(201).send({ id: userId });

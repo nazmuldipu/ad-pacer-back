@@ -27,26 +27,38 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const config_1 = __importDefault(require("config"));
 const http = __importStar(require("http"));
-const users_routes_config_1 = require("./users/users.routes.config");
+const winston = __importStar(require("winston"));
+const expressWinston = __importStar(require("express-winston"));
+const cors_1 = __importDefault(require("cors"));
+const config_1 = __importDefault(require("config"));
 const debug_1 = __importDefault(require("debug"));
-const routes = [];
+const users_routes_config_1 = require("./users/users.routes.config");
 const app = (0, express_1.default)();
 const server = http.createServer(app);
 const HTTP_SERVER_PORT = config_1.default.get("HTTP_SERVER_PORT") || 5432;
-const debugLog = (0, debug_1.default)('app');
+const routes = [];
+const debugLog = (0, debug_1.default)("app");
+const loggerOptions = {
+    transports: [new winston.transports.Console()],
+    format: winston.format.combine(winston.format.json(), winston.format.prettyPrint(), winston.format.colorize({ all: true })),
+};
+if (!process.env.DEBUG) {
+    loggerOptions.meta = false; // when not debugging, make terse
+}
+app.use(expressWinston.logger(loggerOptions));
+app.use(express_1.default.json());
+app.use((0, cors_1.default)());
 routes.push(new users_routes_config_1.UsersRoutes(app));
-require("./startup/logging")();
+const runningMessage = `Server running at http://localhost:${HTTP_SERVER_PORT}`;
 app.get("/", (req, res) => {
-    console.log(req.body);
-    res.send("Hello World!");
+    res.status(200).send(runningMessage);
 });
 const servern = server.listen(HTTP_SERVER_PORT, () => {
-    debugLog(`Server running at http://localhost:${HTTP_SERVER_PORT}`);
     routes.forEach((route) => {
         debugLog(`Routes configured for ${route.getName()}`);
     });
+    console.log(runningMessage);
 });
 module.exports = servern;
 //# sourceMappingURL=app.js.map
