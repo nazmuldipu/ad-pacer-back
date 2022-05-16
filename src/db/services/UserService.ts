@@ -1,4 +1,4 @@
-import * as UserDal from '../dal/User'
+import * as UserDal from '../dal/user'
 import {GetAllUsersFilters} from '../dal/types'
 import {UserInput, UserOutput} from '../models/User'
 
