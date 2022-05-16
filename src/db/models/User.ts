@@ -1,26 +1,20 @@
-// export interface UserDto {
-//     id: string;
-//     email: string;
-//     password: string;
-//     firstName?: string;
-//     lastName?: string;
-//     permissionLevel?: number;
-// }
-
-
-import { DataTypes, Model, Optional } from 'sequelize'
-import sequelizeConnection from "../../db/config";
+import { DataTypes, Model, ModelStatic, Optional } from 'sequelize'
+import sequelizeConnection from '../config'
 
 interface UserAttributes {
     id: number;
     name: string;
     email: string;
-    password: string;
+    password?: string;
     permissionLevel?: number;
+    createdAt?: Date;
+    updatedAt?: Date;
+    deletedAt?: Date;
 }
-export interface UserInput extends Optional<UserAttributes, 'id' | 'email'> { }
-export interface UserOuput extends Required<UserAttributes> { }
 
+export interface UserInput extends Optional<UserAttributes, 'id' | 'email'> {}
+
+export interface UserOutput extends Required<UserAttributes> {}
 
 class User extends Model<UserAttributes, UserInput> implements UserAttributes {
     public id!: number
@@ -28,7 +22,7 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
     public email!: string
     public password!: string
     public permissionLevel!: number
-
+    
     // timestamps!
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -57,9 +51,8 @@ User.init({
         type: DataTypes.INTEGER.UNSIGNED,
     }
 }, {
-    timestamps: true,
-    sequelize: sequelizeConnection,
-    paranoid: true
+  sequelize: sequelizeConnection,
+  paranoid: true
 })
 
 export default User
