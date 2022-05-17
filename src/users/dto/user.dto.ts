@@ -1,8 +1,9 @@
 export interface UserDto {
-    id: string;
+    id: number;
+    name?: string;
     email: string;
-    password: string;
-    firstName?: string;
-    lastName?: string;
-    permissionLevel?: number;
+    refreshToken?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    deletedAt?: Date;
 }

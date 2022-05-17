@@ -9,11 +9,12 @@ class UsersMiddleware {
 		res: express.Response,
 		next: express.NextFunction
 	) {
-		if (req.body && req.body.email && req.body.password) {
+		console.log('validateRequiredUserBodyFields')
+		if (req.body && req.body.email && req.body.name) {
 			next();
 		} else {
 			res.status(400).send({
-				error: "Missing required fields email and password",
+				error: "Missing required fields name and email",
 			});
 		}
 	}
@@ -36,8 +37,9 @@ class UsersMiddleware {
 		res: express.Response,
 		next: express.NextFunction
 	) {
+		console.log('validateSameEmailBelongToSameUser', req.body.email)
 		const user = await userService.getUserByEmail(req.body.email);
-		if (user && user.id === req.params.userId) {
+		if (user && user.id === Number(req.params.userId)) {
 			next();
 		} else {
 			res.status(400).send({ error: "Invalid email" });
@@ -64,7 +66,7 @@ class UsersMiddleware {
 		res: express.Response,
 		next: express.NextFunction
 	) {
-		const user = await userService.readById(req.params.userId);
+		const user = await userService.readById(Number(req.params.userId));
 		if (user) {
 			next();
 		} else {

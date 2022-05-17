@@ -7,12 +7,11 @@ class UsersService implements CRUD {
 		return UsersDao.addUser(resource);
 	}
 
-	async deleteById(resourceId: string) {
-		return UsersDao.removeUserById(resourceId);
+	async deleteById(resourceId: number) {
+		return UsersDao.removeUserById(resourceId).toString();
 	}
 
 	async list(limit: number, page: number) {
-		console.log('limit', limit, 'page', page);
 		return UsersDao.getUsers();
 	}
 
@@ -20,7 +19,7 @@ class UsersService implements CRUD {
 		return UsersDao.patchUserById(resource);
 	}
 
-	async readById(resourceId: string) {
+	async readById(resourceId: number) {
 		return UsersDao.getUserById(resourceId);
 	}
 
