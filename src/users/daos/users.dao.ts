@@ -3,15 +3,13 @@ import { Op } from "sequelize";
 import { User } from "../models";
 import { UserInput, UserOutput } from "../models/User";
 import { GetAllUsersFilters } from "./types";
-import { isEmpty } from "lodash";
 
-import shortid from "shortid";
 import debug from "debug";
 
 const log: debug.IDebugger = debug("app:in-memory-dao");
 
 class UsersDao {
-    users: Array<UserDto> = [];
+    // users: Array<UserDto> = [];
 
     constructor() {
         log("Created new instance of UsersDao");
@@ -54,32 +52,27 @@ class UsersDao {
     async putUserById(user: UserDto): Promise<UserOutput> {
         const currentUser = await User.findByPk(user.id);
 
-        if (!currentUser) {
-            // @todo throw custom error
-            throw new Error("not found");
-        }
-
         const updatedUser = await currentUser.update(user);
         return updatedUser;
     }
 
     async patchUserById(user: UserDto) {
-        const objIndex = this.users.findIndex(
-            (obj: { id: number }) => obj.id === user.id
-        );
-        const currentUser = this.users[objIndex];
-        const allowedPatchFields = [
-            "password",
-            "firstName",
-            "lastName",
-            "permissionLevel",
-        ];
-        for (const field of allowedPatchFields) {
-            if (field in user) {
-                currentUser[field] = user[field];
-            }
-        }
-        this.users.splice(objIndex, 1, currentUser);
+        // const objIndex = this.users.findIndex(
+        //     (obj: { id: number }) => obj.id === user.id
+        // );
+        // const currentUser = this.users[objIndex];
+        // const allowedPatchFields = [
+        //     "password",
+        //     "firstName",
+        //     "lastName",
+        //     "permissionLevel",
+        // ];
+        // for (const field of allowedPatchFields) {
+        //     if (field in user) {
+        //         currentUser[field] = user[field];
+        //     }
+        // }
+        // this.users.splice(objIndex, 1, currentUser);
         return `${user.id} patched`;
     }
 

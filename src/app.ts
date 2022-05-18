@@ -8,6 +8,7 @@ import debug from "debug";
 
 import { CommonRoutesConfig } from "./common/common.routes.config";
 import { UsersRoutes } from "./users/users.routes.config";
+import { ClientRoutes } from "./clients/clients.routes.config";
 import dbInit from './db/init'
 
 dbInit();
@@ -34,6 +35,7 @@ app.use(express.json());
 app.use(cors());
 
 routes.push(new UsersRoutes(app));
+routes.push(new ClientRoutes(app));
 
 const runningMessage = `Server running at http://localhost:${HTTP_SERVER_PORT}`;
 
