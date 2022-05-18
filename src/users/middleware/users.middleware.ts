@@ -26,7 +26,7 @@ class UsersMiddleware {
 	) {
 		const user = await userService.getUserByEmail(req.body.email);
 		if (user) {
-			res.status(400).send({ error: "User email already exists" });
+			res.status(400).send({ error: `User email already exists ${!!user.deletedAt ? 'but soft deleted':''}` });
 		} else {
 			next();
 		}

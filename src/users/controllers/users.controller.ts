@@ -2,6 +2,7 @@ import express from "express";
 import usersService from "../services/users.service";
 // import argon2 from "argon2";
 import debug from "debug";
+import { UserDto } from "../dto/user.dto";
 
 const log: debug.IDebugger = debug("app:users-controller");
 class UsersController {
@@ -12,6 +13,9 @@ class UsersController {
 
     async getUserById(req: express.Request, res: express.Response) {
         const user = await usersService.readById(Number(req.params.userId));
+        if (!user) {
+            return res.status(404).send("not found");
+        }
         res.status(200).send(user);
     }
 
@@ -32,10 +36,11 @@ class UsersController {
     async put(req: express.Request, res: express.Response) {
         console.log("put");
         req.body.password = "1ag4alkaaljf"; //await argon2.hash(req.body.password);
-        const resp: any = await usersService.updateById({
+        const userObj: UserDto = {
             id: req.params.userId,
             ...req.body,
-        });
+        };
+        const resp: UserDto = await usersService.updateById(userObj);
         // log(resp);
         res.status(204).send(resp);
     }

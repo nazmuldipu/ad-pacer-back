@@ -41,17 +41,17 @@ class UsersDao {
     }
 
     async getUserById(userId: number): Promise<UserOutput> {
-        const ingredient = await User.findByPk(userId);
+        const user = await User.findByPk(userId);
 
-        if (!ingredient) {
-            // @todo throw custom error
-            throw new Error("not found");
-        }
+        // if (!user) {
+        //     // @todo throw custom error
+        //     throw new Error("not found");
+        // }
 
-        return ingredient;
+        return user;
     }
 
-    async putUserById(user: UserDto) {
+    async putUserById(user: UserDto): Promise<UserOutput> {
         const currentUser = await User.findByPk(user.id);
 
         if (!currentUser) {
@@ -94,8 +94,9 @@ class UsersDao {
     async getUserByEmail(email: string) {
         const userWithEmail = await User.findOne({
             where: {
-                email,
+                email
             },
+            paranoid: false 
         });
         if (userWithEmail) {
             return userWithEmail;
