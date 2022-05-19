@@ -10,7 +10,7 @@ class ClientMiddleware {
         res: express.Response,
         next: express.NextFunction
     ) {
-        if (req.body && req.body.remoteClientId && req.body.name) {
+        if (req.body && req.body.remoteClientId && req.body.name && req.body.teamEmails.length) {
             next();
         } else {
             res.status(400).send({

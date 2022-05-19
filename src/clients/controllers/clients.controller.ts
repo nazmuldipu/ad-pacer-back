@@ -4,27 +4,62 @@ import AdsApiBaseController from "../../ads/controllers/base.controller";
 // import argon2 from "argon2";
 import debug from "debug";
 import { ClientDto } from "../dto/client.dto";
+import { Customer, CustomerClient } from "../dto/customer.dto";
+import { filterUpdateAbleModelKeys } from '../../common/utils/utils';
+import { Client } from "../models";
 
 const log: debug.IDebugger = debug("app:client-controller");
 class ClientController {
-    async clietSettings(req: express.Request, res: express.Response, next: express.NextFunction) {
-        const {customers} = await AdsApiBaseController.getAllClients(req, res, next)
-        let remoteData = customers;
-        const localData = await clientService.list();
-        if (remoteData && remoteData.length) {
-            remoteData = remoteData.map((object) => {
-                const rd = object.customer_client;
-                rd.teamEmails = [];
-                localData.forEach((item) => {
-                //    const item = data.dataValues;
-                   if (item.remoteClientId.toString() === rd.id.toString()) {
-                      rd.teamEmails = JSON.parse(item.teamEmails);
-                   }
+    async clietSettings(
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+    ) {
+        try {
+            const { customers }: { customers: Customer[] } =
+                await AdsApiBaseController.getAllClients(req, res, next);
+            let remoteData = customers;
+            let responseData: CustomerClient[] = [];
+            const localData: ClientDto[] = await clientService.list();
+            if (remoteData && remoteData.length) {
+                responseData = remoteData.map((object) => {
+                    const rd = object.customer_client;
+                    rd.teamEmails = [];
+                    localData.forEach((item) => {
+                        //    const item = data.dataValues;
+                        if (
+                            item.remoteClientId.toString() === rd.id.toString()
+                        ) {
+                            rd.teamEmails = [...item.teamEmails];
+                        }
+                    });
+                    return { ...rd, remoteClientId: rd.id };
                 });
-                return { ...rd, remoteClientId: rd.id };
-             });
+            }
+            res.status(200).send(responseData);
+        } catch (error) {
+            res.status(500).json("Server Error");
         }
-        res.status(200).send("");
+    }
+    async createClietSettings(req: express.Request, res: express.Response, next: express.NextFunction) {
+        try {
+            const remoteClientId = req.body.remoteClientId;
+            const item = await clientService.getClientByRemoteClientId(remoteClientId);
+            
+            if (item) {
+                let Obj: ClientDto = filterUpdateAbleModelKeys(item, req) as ClientDto;
+                Obj['updatedByUserId'] = req['authUser']['id'];
+                res.status(200).json(await item.save());
+            } else {
+                const modelObj: Client = new Client(req.body);
+                modelObj['createdByUserId'] = req['authUser']['id'];
+                await modelObj.save();
+                res.status(201).json(modelObj);
+            }
+        } catch (error) {
+            console.log(error.message);
+            next(error);
+        }
     }
     async listClient(req: express.Request, res: express.Response) {
         const client = await clientService.list();
@@ -32,7 +67,9 @@ class ClientController {
     }
 
     async getClientById(req: express.Request, res: express.Response) {
-        const client = await clientService.readById(Number(req.params.clientId));
+        const client = await clientService.readById(
+            Number(req.params.clientId)
+        );
         if (!client) {
             return res.status(404).send("not found");
         }

@@ -10,9 +10,13 @@ export class ClientRoutes extends CommonRoutesConfig {
     }
 
     configureRoutes() {
-        this.app.route("/ads-api/settings-clients").get(
-            ClientController.clietSettings
-        );
+        this.app
+            .route("/ads-api/settings-clients")
+            .get(ClientController.clietSettings)
+            .post(
+                ClientMiddleware.validateRequiredClientBodyFields,
+                ClientController.createClietSettings
+            );
         this.app
             .route("/user")
             .get(ClientController.listClient)
