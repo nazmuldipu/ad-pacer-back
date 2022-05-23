@@ -9,6 +9,8 @@ const isEmail = (email: string): boolean => {
     );
     return regexp.test(email);
 };
+const ALLOWED_EMAIL_SUFFIX = process.env.ALLOWED_EMAIL_SUFFIX.split(',');
+const loginError = { status: 422, message: process.env.LOGIN_ERROR_MESSAGE }
 
 class UsersMiddleware {
     async validateRequiredUserBodyFields(
@@ -47,6 +49,29 @@ class UsersMiddleware {
         }
     }
 
+    hasSubstring (email: string): boolean {
+        console.log('email', email);
+        return ALLOWED_EMAIL_SUFFIX.some(suffix => email.includes(suffix));
+    }
+
+    async validateEmail(email:string){
+        try {
+            if (email){
+                if(!this.hasSubstring(email)){
+                    throw loginError;
+                }
+                let item = await userService.getUserByEmail(email);
+                if (item && item.id) {
+                    return true;
+                }
+                return false;                                                                                                                                                                               
+            }
+            return false;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async validateSameEmailBelongToSameUser(
         req: express.Request,
         res: express.Response,
@@ -74,6 +99,7 @@ class UsersMiddleware {
             next();
         }
     };
+    
 
     async validateUserExists(
         req: express.Request,

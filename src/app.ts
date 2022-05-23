@@ -5,6 +5,10 @@ import * as expressWinston from "express-winston";
 import cors from "cors";
 import config from "config";
 import debug from "debug";
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
 
 import { CommonRoutesConfig } from "./common/common.routes.config";
 import { UsersRoutes } from "./users/users.routes.config";
@@ -49,5 +53,7 @@ const servern = server.listen(HTTP_SERVER_PORT, () => {
 	});
 	console.log(runningMessage);
 });
+
+console.log('process.env.ALLOWED_EMAIL_SUFFIX', process.env.ALLOWED_EMAIL_SUFFIX)
 
 module.exports = servern;

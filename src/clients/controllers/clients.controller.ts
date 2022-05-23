@@ -1,15 +1,117 @@
 import express from "express";
+import jwt from "jsonwebtoken";
 import clientService from "../services/clients.service";
 import AdsApiBaseController from "../../ads/controllers/base.controller";
+import axios from "axios";
+import UsersMiddleware from "../../users/middleware/users.middleware";
+import usersService from "../../users/services/users.service";
+
 // import argon2 from "argon2";
 import debug from "debug";
 import { ClientDto } from "../dto/client.dto";
 import { Customer, CustomerClient } from "../dto/customer.dto";
-import { filterUpdateAbleModelKeys } from '../../common/utils/utils';
+import { filterUpdateAbleModelKeys } from "../../common/utils/utils";
+import { google } from "googleapis";
 import { Client } from "../models";
+import { UserDto } from "../../users/dto/user.dto";
 
 const log: debug.IDebugger = debug("app:client-controller");
+
+const getRedirectURL = ({ hostname }) => {
+    return process.env.REDIRECT_URL;
+    // return 'http://localhost:3000'
+};
+const decodeAuthCredentials = async (token) => {
+    const url = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`;
+    const result = await axios.get(url);
+    return result.data;
+};
+
+//get access tokens
+const generateAccessToken = (user) => {
+    return jwt.sign(
+        {email: user.email, id: user.id}, process.env.JWT_SECRET,
+        {expiresIn: process.env.JWT_EXPIRY}
+    )
+ }
+ 
+ // get refresh tokens
+ let refreshTokens = [];
+ const generateRefreshToken = (user: UserDto) => {
+    const refreshToken = jwt.sign(
+        {email: user.email, id: user.id}, "refreshSecret",
+        {expiresIn: process.env?.JWT_REFRESH_TOKEN_EXPIRY || process.env.JWT_EXPIRY}
+    );
+ 
+    refreshTokens.push(refreshToken);
+    return refreshToken;
+ }
+
+
 class ClientController {
+    async oAuthClient(
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+    ) {
+        console.log(process.env.CLIENT_ID);
+        try {
+            const oauth2client = new google.auth.OAuth2(
+                process.env.CLIENT_ID,
+                process.env.CLIENT_SECRET,
+                getRedirectURL(req)
+            );
+            const { tokens } = await oauth2client.getToken(req.body.code);
+            const user = await decodeAuthCredentials(tokens.access_token);
+            const isValidEmail = await UsersMiddleware.validateEmail(user.email);
+
+            req.body.email = user.email;
+            req.body.refreshToken = tokens.refresh_token;
+
+            if (!isValidEmail) {
+                req.body.name = user.name;
+                const modelObj = await usersService.create(req.body);
+            }
+
+            const { accessToken, userObj } = await this.login(req, res, next);
+            user.accessToken = accessToken;
+            user.refreshToken = userObj.refreshToken;
+            user.loginUserId = userObj.id;
+
+            res.json({ ...tokens, user });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async login(req: express.Request,
+        res: express.Response,
+        next: express.NextFunction) {
+        try {
+           const user = await usersService.getUserByEmail(req.body.email);
+           if (user && user.id) {
+              const userObject = {
+                 id: user.id,
+                 name: user.name,
+                 email: user.email,
+              };
+  
+              const accessToken = generateAccessToken(userObject);
+              const refreshToken = generateRefreshToken(userObject);
+  
+              //saving refresh token on users table
+              user.refreshToken = req.body.refreshToken
+              user.save()
+  
+              return {accessToken, refreshToken, userObj: user}
+           }
+  
+           throw { status: 401, message: process.env.LOGIN_ERROR_MESSAGE };
+        } catch (err) {
+           next(err)
+        }
+     };
+
     async clietSettings(
         req: express.Request,
         res: express.Response,
@@ -41,18 +143,24 @@ class ClientController {
             res.status(500).json("Server Error");
         }
     }
-    async createClietSettings(req: express.Request, res: express.Response, next: express.NextFunction) {
+    async createClietSettings(
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+    ) {
         try {
             const remoteClientId = req.body.remoteClientId;
-            const item = await clientService.getClientByRemoteClientId(remoteClientId);
-            
+            const item = await clientService.getClientByRemoteClientId(
+                remoteClientId
+            );
+
             if (item) {
-                let Obj: ClientDto = filterUpdateAbleModelKeys(item, req) as ClientDto;
-                Obj['updatedByUserId'] = req['authUser']['id'];
+                let Obj: ClientDto = {} as ClientDto; //filterUpdateAbleModelKeys(item, req) as ClientDto;
+                Obj["updatedByUserId"] = req["authUser"]["id"];
                 res.status(200).json(await item.save());
             } else {
                 const modelObj: Client = new Client(req.body);
-                modelObj['createdByUserId'] = req['authUser']['id'];
+                modelObj["createdByUserId"] = req["authUser"]["id"];
                 await modelObj.save();
                 res.status(201).json(modelObj);
             }
