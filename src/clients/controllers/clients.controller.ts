@@ -67,12 +67,25 @@ class ClientController {
         }
     }
 
+    async getClientList(
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+    ) {
+        try {
+            res.status(200).send(await AdsApiBaseController.getAllClients(req, res, next));
+        } catch (error) {
+            res.status(500).json("Server Error");
+        }
+    }
     async clietSettings(
         req: express.Request,
         res: express.Response,
         next: express.NextFunction
     ) {
         try {
+            console.log("AdsApiBaseController");
+            console.log(AdsApiBaseController);
             const { customers }: { customers: Customer[] } =
                 await AdsApiBaseController.getAllClients(req, res, next);
 
@@ -81,7 +94,7 @@ class ClientController {
             const localData: ClientDto[] = await clientService.list();
             if (remoteData && remoteData.length) {
                 responseData = remoteData.map((object: Customer) => {
-                    const rd:CustomerClient = object.customer_client;
+                    const rd: CustomerClient = object.customer_client;
                     rd.teamEmails = [];
                     localData.forEach((item) => {
                         //    const item = data.dataValues;

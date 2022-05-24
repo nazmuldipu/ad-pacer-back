@@ -1,7 +1,7 @@
 import { CommonRoutesConfig } from "../common/common.routes.config";
 import ClientController from "./controllers/clients.controller";
 import ClientMiddleware from "./middleware/clients.middleware";
-// import AdsApiBaseController from "../ads/controller/base.controller";
+import AdsApiBaseController from "../ads/controllers/base.controller";
 import express from "express";
 
 export class ClientRoutes extends CommonRoutesConfig {
@@ -16,10 +16,13 @@ export class ClientRoutes extends CommonRoutesConfig {
         this.app
             .route("/ads-api/settings-clients")
             .get(ClientController.clietSettings)
-            .post(
-                ClientMiddleware.validateRequiredClientBodyFields,
-                ClientController.createClietSettings
-            );
+            // .post(
+            //     ClientMiddleware.validateRequiredClientBodyFields,
+            //     ClientController.createClietSettings
+            // );
+        this.app
+            .route("/ads-api/clients")
+            .get(ClientController.getClientList);
         return this.app;
     }
 }

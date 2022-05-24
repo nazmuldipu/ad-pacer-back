@@ -10,6 +10,8 @@ export class AdsRoutes extends CommonRoutesConfig {
     }
 
     configureRoutes() {
+        console.log('configureRoutes');
+        console.log(AdsApiBaseController);
         this.app
             .route("/ads-api/clients")
             .get(AdsApiBaseController.getAllClients);

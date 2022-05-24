@@ -145,6 +145,8 @@ class AdsApiBaseController {
         next: express.NextFunction
     ) {
         try {
+            console.log("getAllClients");
+            console.log(this);
             let { resourceNames }: { resourceNames: string[] } =
                 await this.getAccessibleCustomers(req, res, next);
 
