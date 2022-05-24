@@ -10,7 +10,32 @@ class ClientMiddleware {
         res: express.Response,
         next: express.NextFunction
     ) {
-        if (req.body && req.body.remoteClientId && req.body.name && req.body.teamEmails.length) {
+        if (
+            req.body &&
+            req.body.remoteClientId &&
+            req.body.name &&
+            req.body.teamEmails.length
+        ) {
+            next();
+        } else {
+            res.status(400).send({
+                message: "Missing required fields name and email",
+            });
+        }
+    }
+
+    validateClientsPagination(
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+    ) {
+        console.log('validateClientsPagination', req.body);
+        if (
+            req.body &&
+            req.body.sortBy &&
+            req.body.limit &&
+            req.body.page
+        ) {
             next();
         } else {
             res.status(400).send({
@@ -24,7 +49,9 @@ class ClientMiddleware {
         res: express.Response,
         next: express.NextFunction
     ) {
-        const client = await clientService.getClientByRemoteClientId(req.body.remoteClientId);
+        const client = await clientService.getClientByRemoteClientId(
+            req.body.remoteClientId
+        );
         if (client) {
             res.status(400).send({
                 message: `Client email already exists ${
@@ -41,7 +68,9 @@ class ClientMiddleware {
         res: express.Response,
         next: express.NextFunction
     ) {
-        const client = await clientService.getClientByRemoteClientId(req.body.remoteClientId);
+        const client = await clientService.getClientByRemoteClientId(
+            req.body.remoteClientId
+        );
         if (client && client.id === Number(req.params.clientId)) {
             next();
         } else {
@@ -49,13 +78,14 @@ class ClientMiddleware {
         }
     }
 
-
     async validateClientExists(
         req: express.Request,
         res: express.Response,
         next: express.NextFunction
     ) {
-        const client = await clientService.readById(Number(req.params.clientId));
+        const client = await clientService.readById(
+            Number(req.params.clientId)
+        );
         if (client) {
             next();
         } else {

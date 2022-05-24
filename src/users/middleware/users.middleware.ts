@@ -50,7 +50,6 @@ class UsersMiddleware {
     }
 
     hasSubstring (email: string): boolean {
-        console.log('email', email);
         return ALLOWED_EMAIL_SUFFIX.some(suffix => email.includes(suffix));
     }
 

@@ -1,5 +1,4 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import clientService from "../services/clients.service";
 import AdsApiBaseController from "../../ads/controllers/base.controller";
 import axios from "axios";
@@ -14,6 +13,7 @@ import { filterUpdateAbleModelKeys } from "../../common/utils/utils";
 import { google } from "googleapis";
 import { Client } from "../models";
 import { UserDto } from "../../users/dto/user.dto";
+import UsersController from "../../users/controllers/users.controller";
 
 const log: debug.IDebugger = debug("app:client-controller");
 
@@ -27,34 +27,12 @@ const decodeAuthCredentials = async (token) => {
     return result.data;
 };
 
-//get access tokens
-const generateAccessToken = (user) => {
-    return jwt.sign(
-        {email: user.email, id: user.id}, process.env.JWT_SECRET,
-        {expiresIn: process.env.JWT_EXPIRY}
-    )
- }
- 
- // get refresh tokens
- let refreshTokens = [];
- const generateRefreshToken = (user: UserDto) => {
-    const refreshToken = jwt.sign(
-        {email: user.email, id: user.id}, "refreshSecret",
-        {expiresIn: process.env?.JWT_REFRESH_TOKEN_EXPIRY || process.env.JWT_EXPIRY}
-    );
- 
-    refreshTokens.push(refreshToken);
-    return refreshToken;
- }
-
-
 class ClientController {
     async oAuthClient(
         req: express.Request,
         res: express.Response,
         next: express.NextFunction
     ) {
-        console.log(process.env.CLIENT_ID);
         try {
             const oauth2client = new google.auth.OAuth2(
                 process.env.CLIENT_ID,
@@ -63,7 +41,9 @@ class ClientController {
             );
             const { tokens } = await oauth2client.getToken(req.body.code);
             const user = await decodeAuthCredentials(tokens.access_token);
-            const isValidEmail = await UsersMiddleware.validateEmail(user.email);
+            const isValidEmail = await UsersMiddleware.validateEmail(
+                user.email
+            );
 
             req.body.email = user.email;
             req.body.refreshToken = tokens.refresh_token;
@@ -72,8 +52,11 @@ class ClientController {
                 req.body.name = user.name;
                 const modelObj = await usersService.create(req.body);
             }
-
-            const { accessToken, userObj } = await this.login(req, res, next);
+            const { accessToken, userObj } = await UsersController.login(
+                req,
+                res,
+                next
+            );
             user.accessToken = accessToken;
             user.refreshToken = userObj.refreshToken;
             user.loginUserId = userObj.id;
@@ -84,34 +67,6 @@ class ClientController {
         }
     }
 
-    async login(req: express.Request,
-        res: express.Response,
-        next: express.NextFunction) {
-        try {
-           const user = await usersService.getUserByEmail(req.body.email);
-           if (user && user.id) {
-              const userObject = {
-                 id: user.id,
-                 name: user.name,
-                 email: user.email,
-              };
-  
-              const accessToken = generateAccessToken(userObject);
-              const refreshToken = generateRefreshToken(userObject);
-  
-              //saving refresh token on users table
-              user.refreshToken = req.body.refreshToken
-              user.save()
-  
-              return {accessToken, refreshToken, userObj: user}
-           }
-  
-           throw { status: 401, message: process.env.LOGIN_ERROR_MESSAGE };
-        } catch (err) {
-           next(err)
-        }
-     };
-
     async clietSettings(
         req: express.Request,
         res: express.Response,
@@ -120,12 +75,13 @@ class ClientController {
         try {
             const { customers }: { customers: Customer[] } =
                 await AdsApiBaseController.getAllClients(req, res, next);
+
             let remoteData = customers;
             let responseData: CustomerClient[] = [];
             const localData: ClientDto[] = await clientService.list();
             if (remoteData && remoteData.length) {
-                responseData = remoteData.map((object) => {
-                    const rd = object.customer_client;
+                responseData = remoteData.map((object: Customer) => {
+                    const rd:CustomerClient = object.customer_client;
                     rd.teamEmails = [];
                     localData.forEach((item) => {
                         //    const item = data.dataValues;
@@ -199,7 +155,6 @@ class ClientController {
     }
 
     async put(req: express.Request, res: express.Response) {
-        console.log("put");
         req.body.password = "1ag4alkaaljf"; //await argon2.hash(req.body.password);
         const clientObj: ClientDto = {
             id: req.params.clientId,

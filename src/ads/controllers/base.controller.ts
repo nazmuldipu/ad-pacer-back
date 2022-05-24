@@ -3,6 +3,7 @@ import express from "express";
 import { Oath2Params, AxiosConfig } from "../dto";
 import { getAccessTokenGettableURL } from "../../common/utils/googleAdsQuery";
 import { GoogleAdsApi } from "google-ads-api";
+import type { Customer } from "../../clients/dto/customer.dto";
 
 class AdsApiBaseController {
     /**
@@ -122,8 +123,9 @@ class AdsApiBaseController {
             },
         };
         try {
-            const result = await axios.get(URL, config);
-            return result.data;
+            const { data }: { data: { resourceNames: string[] } } =
+                await axios.get(URL, config);
+            return data;
         } catch (error) {
             throw error;
         }
@@ -143,23 +145,20 @@ class AdsApiBaseController {
         next: express.NextFunction
     ) {
         try {
-            let { resourceNames } = await this.getAccessibleCustomers(
-                req,
-                res,
-                next
-            );
+            let { resourceNames }: { resourceNames: string[] } =
+                await this.getAccessibleCustomers(req, res, next);
+
             const query =
                 "SELECT customer_client.client_customer, customer_client.descriptive_name, customer_client.currency_code, customer_client.id, customer_client.level, customer_client.manager, customer_client.time_zone FROM customer_client WHERE customer_client.manager = FALSE";
 
-            if (resourceNames && resourceNames.length) {
-                resourceNames =
-                    resourceNames &&
-                    resourceNames.length &&
-                    resourceNames.map((str: string) => {
-                        return str.replace(/['customers/' ]+/g, " ").trim();
-                    });
-            }
-
+            resourceNames =
+                resourceNames &&
+                resourceNames.length &&
+                resourceNames.map((str: string) => {
+                    return str.replace(/['customers/' ]+/g, " ").trim();
+                });
+            
+            
             let customers = [];
             let customerId = null;
             let clientCustomersIds = [];
@@ -170,7 +169,7 @@ class AdsApiBaseController {
                         resourceNames[i];
                 try {
                     const customer = await this.getCustomer(req, res, next);
-                    const newCustomers = await customer.query(query);
+                    const newCustomers: Customer[] = await customer.query(query);
                     if (newCustomers && newCustomers.length) {
                         let filteredCustomers = [];
                         newCustomers.forEach((el) => {
