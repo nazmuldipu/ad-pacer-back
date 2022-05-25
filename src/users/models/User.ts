@@ -41,6 +41,8 @@ User.init(
     {
         sequelize: sequelizeConnection,
         paranoid: true,
+        modelName: 'User',
+        tableName: 'users',
     }
 );
 

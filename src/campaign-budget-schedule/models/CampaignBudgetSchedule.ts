@@ -96,8 +96,6 @@ CampaignAccounting.init(
     {
         sequelize: sequelizeConnection,
         paranoid: true,
-        modelName: 'CampaignAccounting',
-        tableName: 'campaign_accounting'
     }
 );
 

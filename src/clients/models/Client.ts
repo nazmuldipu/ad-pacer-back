@@ -43,6 +43,8 @@ Client.init(
     {
         sequelize: sequelizeConnection,
         paranoid: true,
+        modelName: "Client",
+        tableName: "clients"
     }
 );
 
