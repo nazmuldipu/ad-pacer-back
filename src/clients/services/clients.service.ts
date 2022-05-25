@@ -32,7 +32,7 @@ class ClientsService implements CRUD {
 	}
 
 	async getClientByRemoteClientId(remoteClientId: string) {
-		return ClientsDao.getClientByName(remoteClientId);
+		return ClientsDao.getClientByRemoteClientId(remoteClientId);
 	}
 }
 

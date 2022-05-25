@@ -34,6 +34,7 @@
         "google-ads-api": "^10.0.1",
         "googleapis": "^100.0.0",
         "http-status": "^1.5.2",
+        "joi": "^17.6.0",
         "jsonwebtoken": "^8.5.1",
         "pg": "^8.7.3",
         "sequelize": "^6.19.0",

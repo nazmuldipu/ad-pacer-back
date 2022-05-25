@@ -66,7 +66,7 @@ class ClientsDao {
     async getClientByRemoteClientId(remoteClientId: string) {
         const clientWithRemoteClientId = await Client.findOne({
             where: {
-                remoteClientId
+                remoteClientId: remoteClientId.toString()
             },
             paranoid: false 
         });
