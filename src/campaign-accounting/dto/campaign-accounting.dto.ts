@@ -1,4 +1,4 @@
-export interface CampaignAccounting {
+export interface CampaignAccountingDto {
     id: number;
     campaignId: string;
     totalBudgetAmount: string;

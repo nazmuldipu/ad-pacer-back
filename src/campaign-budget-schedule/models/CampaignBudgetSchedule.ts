@@ -1,12 +1,12 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelizeConnection from "../../db/config";
-import { CampaignBudgetSchedule } from "../dto/campaign-budget-schedule";
+import { CampaignBudgetScheduleDto } from "../dto/campaign-budget-schedule.dto";
 
-export interface CampaignBudgetScheduleInput extends Optional<CampaignBudgetSchedule, "id"> {}
+export interface CampaignBudgetScheduleInput extends Optional<CampaignBudgetScheduleDto, "id"> {}
 
-export interface CampaignBudgetScheduleOutput extends Required<CampaignBudgetSchedule> {}
+export interface CampaignBudgetScheduleOutput extends Required<CampaignBudgetScheduleDto> {}
 
-class CampaignBudgetSchedule extends Model<CampaignBudgetSchedule, CampaignBudgetScheduleInput> implements CampaignBudgetSchedule {
+class CampaignBudgetSchedule extends Model<CampaignBudgetScheduleDto, CampaignBudgetScheduleInput> implements CampaignBudgetScheduleDto {
     public id!: number;
     public campaignId!: string;
     public budgetId!: string;
@@ -20,7 +20,7 @@ class CampaignBudgetSchedule extends Model<CampaignBudgetSchedule, CampaignBudge
     public customerId!: string;
     public loginCustomerId!: string;
     public customerTimezone!: string;
-    public createdByUserId!: string;
+    public createdByUserId!: number;
     public status!: string;
     public dateExecuted!: string;
 

@@ -1,4 +1,4 @@
-export interface CampaignBudgetSchedule {
+export interface CampaignBudgetScheduleDto {
     id: number;
     campaignId: string;
     budgetId: string;

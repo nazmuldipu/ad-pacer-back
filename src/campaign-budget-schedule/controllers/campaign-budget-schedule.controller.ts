@@ -48,7 +48,7 @@ class CampaignBudgetScheduleController {
     ) {
         try {
             const items = await CampaignBudgetSchedule.findAll({
-                where: { campaignId: req.query.campaignId },
+                where: { campaignId: req.query.campaignId.toString() },
                 include: [{
                     model: User,
                     as: 'user'
@@ -72,7 +72,7 @@ class CampaignBudgetScheduleController {
             const items = [];
             for (let i = 0; i < req.body.campaignBudgetSchedules.length; i++) {
                 const element = req.body.campaignBudgetSchedules[i];
-                element.createdByUserId = req.authUser ? req.authUser.id : null
+                element.createdByUserId = req['authUser'] ? req['authUser'].id : null
                 element.status = 'active'
                 const item = await CampaignBudgetSchedule.create(element);
                 items.push(item)
@@ -102,7 +102,7 @@ class CampaignBudgetScheduleController {
             const items = [];
             for (let i = 0; i < req.body.campaignBudgetSchedules.length; i++) {
                 const element = req.body.campaignBudgetSchedules[i];
-                element.createdByUserId = req.authUser ? req.authUser.id : null
+                element.createdByUserId =  req["authUser"] ?  req["authUser"]["id"] : null
                 element.status = 'active'
                 const response = await this.updateSingleCampaignBudgetSchedule(element)
                 items.push(response)
@@ -129,13 +129,13 @@ class CampaignBudgetScheduleController {
         try {
             if(req.params.id) {
                 const item = await CampaignBudgetSchedule.findOne({ where: { id: req.params.id } });
-                if (!item) res.json({ message: "Resource Not Found!"}, 404);
+                if (!item) res.status(404).json({ message: "Resource Not Found!"});
                 await item.destroy();
                 res.json({ message: "Item deleted!" });
             } else if(req.body.ids.length) {
                 for (let i = 0; i < req.body.ids.length; i++) {
                     let item = await CampaignBudgetSchedule.findOne({ where: { id: req.body.ids[i] } });
-                    if (!item) res.json({ message: "Resource Not Found!"}, 404);
+                    if (!item) res.status(404).json({ message: "Resource Not Found!"});
                     await item.destroy()
                     res.json({ message: "Items deleted!" });
                 }
@@ -202,7 +202,7 @@ class CampaignBudgetScheduleController {
             });
             if (items && items.length) {
                 return items.map((item) => {
-                    return item.dataValues;
+                    return item['dataValues'];
                 });
             }
             return items;
@@ -319,7 +319,7 @@ class CampaignBudgetScheduleController {
      * @param schedule
      * update campaign budget
      */
-    async getCampaignLastChangeEvent(req: express.Request, schedule) {
+    async getCampaignLastChangeEvent(req, schedule) {
         console.log('Getting campaign change history..')
         let history = await adsApiCampaignCtrl.getSingleCampaignHistory(req, schedule.timezone);
         history = history.map((item) => {
@@ -416,7 +416,7 @@ class CampaignBudgetScheduleController {
      * @param schedule
      * create or update campaign schedule
      */
-    async saveCampaignSchedule(req: express.Request, schedule) {
+    async saveCampaignSchedule(req, schedule) {
         const {customerId, campaignId, refreshToken, loginCustomerId} = schedule
         const URL = getCampaignCriteriaMutableURL(customerId);
         const {access_token} = await adsApiBaseCtrl.getAccessToken(refreshToken);
@@ -462,7 +462,7 @@ class CampaignBudgetScheduleController {
      * @returns remove campaign schedule by internal method call
      * Ref: https://developers.google.com/google-ads/api/rest/reference/rest/v10/CampaignCriterionOperation
      */
-    async deleteCampaignSchedule(req: express.Request, schedule) {
+    async deleteCampaignSchedule(req, schedule) {
         //get campaign criterion and remove if exists
         const criteria = await this.getCriterion(req, schedule)
         let hasAdScheduleResourceName = ''
@@ -516,9 +516,11 @@ class CampaignBudgetScheduleController {
         try {
             let item = await CampaignBudgetSchedule.findOne({ where: { id: element.id } });
             if(item) {
-                const updateAbleObject = {};
+                const updateAbleObject = {
+                    body: null
+                };
                 updateAbleObject.body = element;
-                item = filterUpdateAbleModelKeys(this._model, item, updateAbleObject);
+                item = filterUpdateAbleModelKeys(CampaignBudgetSchedule, item, updateAbleObject);
                 return await item.save();
             }
         } catch (err) {
@@ -532,10 +534,10 @@ class CampaignBudgetScheduleController {
      * create or update campaign accounting for the campaign
      */
     async updateCampaignAccounting(
-        req: express.Request,
+        req,
         campaignId
     ) {
-        const cbsItems = await this._model.findAll({
+        const cbsItems = await CampaignBudgetSchedule.findAll({
             where: { campaignId: campaignId }
         });
 

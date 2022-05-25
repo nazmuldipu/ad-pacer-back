@@ -1,10 +1,10 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelizeConnection from "../../db/config";
-import { CampaignAccounting } from "../dto/campaign-accounting";
+import { CampaignAccountingDto } from "../dto/campaign-accounting.dto";
 
-export interface CampaignAccountingInput extends Optional<CampaignAccounting, "id"> {}
+export interface CampaignAccountingInput extends Optional<CampaignAccountingDto, "id"> {}
 
-export interface CampaignAccountingOutput extends Required<CampaignAccounting> {}
+export interface CampaignAccountingOutput extends Required<CampaignAccountingDto> {}
 
 class CampaignAccounting extends Model<CampaignAccounting, CampaignAccountingInput> implements CampaignAccounting {
     public id!: number;
