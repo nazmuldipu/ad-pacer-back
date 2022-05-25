@@ -1,19 +1,17 @@
 import express from "express";
 import { CommonRoutesConfig } from "../common/common.routes.config";
-import CampaignAccountingController from "./controllers/campaign-accounting.controller";
+import campaignBudgetScheduleCtrl from "./controllers/campaign-budget-schedule.controller";
 
-export class CampaignAccountingRoutes extends CommonRoutesConfig {
+export class CampaignBudgetScheduleRoutes extends CommonRoutesConfig {
     constructor(app: express.Application) {
-        super(app, "CampaignAccountingRoutes");
+        super(app, "CampaignBudgetScheduleRoutes");
     }
 
     configureRoutes() {
-        // this.app.route("/campaign-accounting").get(CampaignAccountingController.clientSettings)
-        // this.app.route("/campaign-accounting/:id").get(CampaignAccountingController.clientSettings)
-        // this.app.route("/campaign-accounting/create").post(CampaignAccountingController.clientSettings)
-        // this.app.route("/campaign-accounting/update").post(CampaignAccountingController.clientSettings)
-        // this.app.route("/campaign-accounting/:id").delete(CampaignAccountingController.clientSettings)
-
+        this.app.route("/campaign-budget-schedule").get(campaignBudgetScheduleCtrl.index)
+        this.app.route("/campaign-budget-schedule/create").post(campaignBudgetScheduleCtrl.store)
+        this.app.route("/campaign-budget-schedule/update").post(campaignBudgetScheduleCtrl.update)
+        this.app.route("/campaign-budget-schedule/:id").delete(campaignBudgetScheduleCtrl.delete)
         return this.app;
     }
 }

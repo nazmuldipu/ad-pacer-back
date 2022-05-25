@@ -1,9 +1,9 @@
 import debug from "debug";
 
-const log: debug.IDebugger = debug("app:clients-controller");
+const log: debug.IDebugger = debug("app:campaign-budget-schedule-controller");
 
-class ClientMiddleware {
+class CampaignBudgetScheduleMiddleware {
 
 }
 
-export default new ClientMiddleware();
+export default new CampaignBudgetScheduleMiddleware();

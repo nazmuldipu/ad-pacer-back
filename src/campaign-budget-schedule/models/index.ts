@@ -1,3 +1,3 @@
-import CampaignAccounting from "./CampaignAccounting";
+import CampaignBudgetSchedule from "./CampaignBudgetSchedule";
 
-export { CampaignAccounting };
+export { CampaignBudgetSchedule };
