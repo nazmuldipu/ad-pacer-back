@@ -31,6 +31,7 @@ const generateRefreshToken = (user: UserDto) => {
     refreshTokens.push(refreshToken);
     return refreshToken;
 };
+
 class UsersController {
     async listUsers(req: express.Request, res: express.Response) {
         const users = await usersService.list(100, 0);

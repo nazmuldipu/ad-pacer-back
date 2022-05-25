@@ -1,6 +1,7 @@
 import express from "express";
 import clientService from "../services/clients.service";
-import AdsApiBaseController from "../../ads/controllers/base.controller";
+const AdsApiBaseController = require("../../ads/controllers/base.controller")
+const adsApiBaseCtrl = new AdsApiBaseController();
 import axios from "axios";
 import UsersMiddleware from "../../users/middleware/users.middleware";
 import usersService from "../../users/services/users.service";
@@ -74,7 +75,7 @@ class ClientController {
     ) {
         try {
             const { customers }: { customers: Customer[] } =
-                await AdsApiBaseController.getAllClients(req, res, next);
+                await adsApiBaseCtrl.getAllClients(req, res, next);
 
             let remoteData = customers;
             let responseData: CustomerClient[] = [];
