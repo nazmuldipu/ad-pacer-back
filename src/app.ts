@@ -16,6 +16,7 @@ import { ClientRoutes } from "./clients/clients.routes.config";
 import { CampaignAccountingRoutes } from "./campaign-accounting/campaign-accounting.routes.config";
 import { AdsRoutes } from "./ads/ads.routes.config";
 import dbInit from './db/init'
+import ValidateAuthRoute from './common/auth.routes.config';
 
 dbInit();
 const app: express.Application = express();
@@ -39,6 +40,7 @@ if (!process.env.DEBUG) {
 app.use(expressWinston.logger(loggerOptions));
 app.use(express.json());
 app.use(cors());
+app.use(ValidateAuthRoute);
 
 routes.push(new UsersRoutes(app));
 routes.push(new ClientRoutes(app));
@@ -55,6 +57,7 @@ const servern = server.listen(HTTP_SERVER_PORT, () => {
 	routes.forEach((route: CommonRoutesConfig) => {
 		debugLog(`Routes configured for ${route.getName()}`);
 	});
+	
 	console.log(runningMessage);
 });
 
