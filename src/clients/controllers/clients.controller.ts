@@ -2,19 +2,11 @@ import express from "express";
 import clientService from "../services/clients.service";
 const AdsApiBaseController = require("../../ads/controllers/base.controller")
 const adsApiBaseCtrl = new AdsApiBaseController();
-import axios from "axios";
-import UsersMiddleware from "../../users/middleware/users.middleware";
-import usersService from "../../users/services/users.service";
-
-// import argon2 from "argon2";
 import debug from "debug";
 import { ClientDto } from "../dto/client.dto";
 import { Customer, CustomerClient } from "../dto/customer.dto";
 import { filterUpdateAbleModelKeys } from "../../common/utils/utils";
-import { google } from "googleapis";
 import { Client } from "../models";
-import { UserDto } from "../../users/dto/user.dto";
-import UsersController from "../../users/controllers/users.controller";
 
 const log: debug.IDebugger = debug("app:client-controller");
 
@@ -65,11 +57,11 @@ class ClientController {
 
             if (item) {
                 let Obj: ClientDto = {} as ClientDto; //filterUpdateAbleModelKeys(item, req) as ClientDto;
-                Obj["updatedByUserId"] = req["authUser"]["id"];
+                Obj["updatedByUserId"] = req["authUser"] ? req["authUser"]["id"] : null;
                 res.status(200).json(await item.save());
             } else {
                 const modelObj: Client = new Client(req.body);
-                modelObj["createdByUserId"] = req["authUser"]["id"];
+                modelObj["createdByUserId"] = req["authUser"] ? req["authUser"]["id"] : null;
                 await modelObj.save();
                 res.status(201).json(modelObj);
             }
