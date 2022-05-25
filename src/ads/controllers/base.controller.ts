@@ -7,6 +7,19 @@ import type { Customer } from "../../clients/dto/customer.dto";
 
 class AdsApiBaseController {
     /**
+     * for the controller. Will be required to create
+     * an instance of the controller
+     */
+    constructor() {
+        this.getAxiosConfig = this.getAxiosConfig.bind(this)
+        this.getOath2Params = this.getOath2Params.bind(this)
+        this.getAccessToken = this.getAccessToken.bind(this)
+        this.getAccessibleCustomers = this.getAccessibleCustomers.bind(this)
+        this.getCustomer = this.getCustomer.bind(this)
+        this.getAllClients = this.getAllClients.bind(this)
+    }
+
+    /**
      *
      * @returns get Oath 2 params
      *
@@ -205,4 +218,4 @@ class AdsApiBaseController {
     }
 }
 
-export default new AdsApiBaseController();
+module.exports = AdsApiBaseController
