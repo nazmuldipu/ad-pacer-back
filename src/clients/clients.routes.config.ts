@@ -1,7 +1,6 @@
 import { CommonRoutesConfig } from "../common/common.routes.config";
 import ClientController from "./controllers/clients.controller";
 import ClientMiddleware from "./middleware/clients.middleware";
-// import AdsApiBaseController from "../ads/controller/base.controller";
 import express from "express";
 
 export class ClientRoutes extends CommonRoutesConfig {
@@ -11,14 +10,11 @@ export class ClientRoutes extends CommonRoutesConfig {
 
     configureRoutes() {
         this.app
-            .route("/ads-api/oauth2/login")
-            .post(ClientController.oAuthClient);
-        this.app
             .route("/ads-api/settings-clients")
-            .get(ClientController.clietSettings)
+            .get(ClientController.clientSettings)
             .post(
                 ClientMiddleware.validateRequiredClientBodyFields,
-                ClientController.createClietSettings
+                ClientController.createClientSettings
             );
         return this.app;
     }
