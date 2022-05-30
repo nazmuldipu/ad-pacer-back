@@ -51,13 +51,16 @@ class ClientController {
     ) {
         try {
             const remoteClientId = req.body.remoteClientId;
-            const item = await clientService.getClientByRemoteClientId(
+            let item = await clientService.getClientByRemoteClientId(
                 remoteClientId
             );
 
             if (item) {
-                let Obj: ClientDto = {} as ClientDto; //filterUpdateAbleModelKeys(item, req) as ClientDto;
-                Obj["updatedByUserId"] = req["authUser"] ? req["authUser"]["id"] : null;
+                // item = filterUpdateAbleModelKeys(item, {}, req);
+                let Obj: ClientDto = filterUpdateAbleModelKeys(item, {}, req) as ClientDto; //filterUpdateAbleModelKeys(item, req) as ClientDto;
+                item["remoteClientId"] = Obj['remoteClientId'];
+                item["teamEmails"] = Obj['teamEmails'];
+                item["updatedByUserId"] = req["authUser"] ? req["authUser"]["id"] : null;
                 res.status(200).json(await item.save());
             } else {
                 const modelObj: Client = new Client(req.body);

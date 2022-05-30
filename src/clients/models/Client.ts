@@ -37,7 +37,15 @@ Client.init(
             type: DataTypes.STRING,
         },
         teamEmails: {
-            type: DataTypes.ARRAY(DataTypes.STRING),
+            type: DataTypes.JSON,
+            allowNull: false,
+            get() {
+                return JSON.parse(this.getDataValue("teamEmails"));
+            },
+            set(value) {
+                return this.setDataValue("teamEmails", JSON.stringify(value));
+            }
+
         },
     },
     {

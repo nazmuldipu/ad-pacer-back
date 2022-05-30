@@ -3,7 +3,7 @@ export interface ClientDto {
     name: string;
     remoteClientId: string;
     createdByUserId?: string;
-    teamEmails?: string | string[];
+    teamEmails?: Array;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
