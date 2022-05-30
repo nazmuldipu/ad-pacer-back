@@ -19,7 +19,7 @@ export class AdsRoutes extends CommonRoutesConfig {
 
     configureRoutes() {
         this.app.route("/ads-api/oauth2/login").post(UserController.oAuthLogin);
-        this.app.route("/ads-api/clients").get(adsApiBaseCtrl.getAllClients);
+        this.app.route("/ads-api/clients").get(adsApiCustomerCtrl.getAllClients);
         this.app.route("/ads-api/campaigns").get(adsApiCampaignCtrl.getAllCampaigns);
         this.app.route("/ads-api/get-criterion").get(adsApiScheduleCtrl.getCriterion);
         this.app.route("/ads-api/save-schedule").post(adsApiScheduleCtrl.saveSchedule);
