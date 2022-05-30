@@ -1,8 +1,8 @@
 import express from "express";
-const {Client} = require("../models");
+const {Client} = require("../../clients/models");
 var SET_EMAIL_MESSAGE = require("../utils/mailBody");
 const mailTransporter = require("../utils/mail");
-const AdsApiBaseController = require("./ads-api-base.controller")
+const AdsApiBaseController = require("../../ads/controllers/base.controller")
 require('dotenv').config({ path: '../../.env' })
 
 class AdsApiHelperController extends AdsApiBaseController{

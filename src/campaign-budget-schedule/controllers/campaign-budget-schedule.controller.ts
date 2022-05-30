@@ -1,13 +1,12 @@
 import debug from "debug";
-const Op = require('../models').Sequelize.Op;
+const {Op} = require('sequelize');
 const axios = require("axios");
 const moment = require("moment-timezone");
 import {CampaignBudgetSchedule} from "../models";
 import express from "express";
 const {User} = require('../../users/models')
-const {filterUpdateAbleModelKeys} = require("../helper/helpers");
-const CampaignAccountingController = require('../../campaign-accounting/controllers/campaign-accounting.controller');
-const campaignAccountingCtrl = new CampaignAccountingController();
+const {filterUpdateAbleModelKeys} = require("../../common/utils/utils");
+const campaignAccountingCtrl = require('../../campaign-accounting/controllers/campaign-accounting.controller');
 const AdsApiHelperNewController = require('../../ads/controllers/helper.controller');
 const adsApiHelperNewCtrl = new AdsApiHelperNewController();
 const AdsApiCampaignController = require("../../ads/controllers/campaign.controller")

@@ -6,7 +6,7 @@ export interface CampaignAccountingInput extends Optional<CampaignAccountingDto,
 
 export interface CampaignAccountingOutput extends Required<CampaignAccountingDto> {}
 
-class CampaignAccounting extends Model<CampaignAccounting, CampaignAccountingInput> implements CampaignAccounting {
+class CampaignAccounting extends Model<CampaignAccountingDto, CampaignAccountingInput> implements CampaignAccountingDto {
     public id!: number;
     public campaignId!: string;
     public totalBudgetAmount!: string;
@@ -17,7 +17,7 @@ class CampaignAccounting extends Model<CampaignAccounting, CampaignAccountingInp
     public campaignPassedDays!: string;
     public campaignRemainingDays!: string;
     public loginCustomerId!: string;
-    public createdByUserId!: string;
+    public createdByUserId!: number;
     public status!: string;
 
     // timestamps!
@@ -42,7 +42,7 @@ CampaignAccounting.init(
         },
         totalCostAmount: {
             allowNull: true,
-            type: Sequelize.STRING,
+            type: DataTypes.STRING,
         },
         additionalCostAmount: {
             allowNull: true,
