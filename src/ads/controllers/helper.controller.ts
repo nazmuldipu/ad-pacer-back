@@ -1,6 +1,6 @@
-import * as express from "express";
+import  express from "express";
 import AdsApiBaseController from "./base.controller";
-import * as dotenv from "dotenv";
+import  dotenv from "dotenv";
 dotenv.config();
 const {Client} = require("../../clients/models");
 var SET_EMAIL_MESSAGE = require("../utils/mailBody");

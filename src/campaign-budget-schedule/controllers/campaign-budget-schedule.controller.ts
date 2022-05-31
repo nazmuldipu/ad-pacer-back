@@ -1,8 +1,8 @@
 import debug from "debug";
-import * as express from "express";
+import  express from "express";
 import {Op} from 'sequelize';
 import axios from "axios";
-import * as moment from "moment-timezone";
+import  moment from "moment-timezone";
 import {CampaignBudgetSchedule} from "../models";
 import {User} from '../../users/models'
 import {filterUpdateAbleModelKeys} from "../../common/utils/utils";
@@ -17,7 +17,7 @@ const adsApiBaseCtrl = new AdsApiBaseController();
 
 import {getBudgetMutableURL, getCampaignCriteriaMutableURL} from "../../common/utils/googleAdsQuery";
 
-import * as dotenv from "dotenv";
+import  dotenv from "dotenv";
 import {CampaignBudgetScheduleDto} from "../dto/campaign-budget-schedule.dto";
 import CampaignBudgetScheduleDao from "../daos/campaign-budget-schedule.dao";
 
@@ -524,11 +524,14 @@ export default class CampaignBudgetScheduleController {
         try {
             let item: CampaignBudgetSchedule = await CampaignBudgetSchedule.findOne({ where: { id: element.id } });
             if(item) {
-                const updateAbleObject = {
-                    body: null
-                };
-                updateAbleObject.body = element;
-                item = filterUpdateAbleModelKeys(CampaignBudgetSchedule, item, updateAbleObject);
+                for (let key in Object.keys(element)) {
+                    const unprocessableKeys = ["id", "updatedAt", "createdAt", "deletedAt"];
+                    if (unprocessableKeys.includes(key)) {
+                        continue;
+                    } else if (element[key]) {
+                        item[key] = element[key];
+                    }
+                }
                 return await item.save();
             }
         } catch (err) {

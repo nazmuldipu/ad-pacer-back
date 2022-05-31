@@ -1,4 +1,4 @@
-import * as dotenv from "dotenv";
+import  dotenv from "dotenv";
 dotenv.config();
 import CampaignBudgetScheduleController from "../campaign-budget-schedule/controllers/campaign-budget-schedule.controller"
 const campaignBudgetScheduleCtrl = new CampaignBudgetScheduleController();

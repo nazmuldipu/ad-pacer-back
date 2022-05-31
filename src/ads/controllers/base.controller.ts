@@ -1,5 +1,5 @@
 import axios from "axios";
-import * as express from "express";
+import  express from "express";
 import { Oath2Params, AxiosConfig } from "../dto";
 import { getAccessTokenGettableURL } from "../../common/utils/googleAdsQuery";
 import { GoogleAdsApi } from "google-ads-api";
