@@ -17,13 +17,12 @@ export interface UserOutput extends Required<UserDto> {}
 
 class User
     extends Model<InferAttributes<User>, InferCreationAttributes<User>>
-    implements UserDto
 {
     declare id: CreationOptional<number>;
     declare name: string;
     declare email: string;
     declare refreshToken: string;
-    declare campaignBudgetSchedules?: NonAttribute<CampaignBudgetSchedule[]>;
+    // declare campaignBudgetSchedules?: NonAttribute<CampaignBudgetSchedule[]>;
 
     // timestamps!
     declare readonly createdAt: Date;
@@ -71,6 +70,6 @@ User.init(
     }
 );
 
-User.hasMany(CampaignBudgetSchedule, { sourceKey: "id", foreignKey: "createdByUserId", as: 'campaignBudgetSchedules' });
+// User.hasMany(CampaignBudgetSchedule, { sourceKey: "id", foreignKey: "createdByUserId", as: 'campaignBudgetSchedules' });
 
 export default User;

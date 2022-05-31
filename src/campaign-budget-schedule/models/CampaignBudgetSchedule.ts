@@ -123,6 +123,9 @@ CampaignBudgetSchedule.init(
     }
 );
 
-// CampaignBudgetSchedule.belongsTo(User, { targetKey: "id" });
+CampaignBudgetSchedule.belongsTo(User, {
+    foreignKey: "createdByUserId",
+    as: "user",
+});
 
 export default CampaignBudgetSchedule;
