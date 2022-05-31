@@ -1,42 +1,47 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import {
+    DataTypes,
+    Model,
+    Optional,
+    ForeignKey,
+    CreationOptional,
+    InferAttributes,
+    InferCreationAttributes,
+} from "sequelize";
 import sequelizeConnection from "../../db/config";
+import { User } from "../../users/models";
 import { CampaignBudgetScheduleDto } from "../dto/campaign-budget-schedule.dto";
 
-export interface CampaignBudgetScheduleInput extends Optional<CampaignBudgetScheduleDto, "id"> {}
+export interface CampaignBudgetScheduleInput
+    extends Optional<CampaignBudgetScheduleDto, "id"> {}
 
-export interface CampaignBudgetScheduleOutput extends Required<CampaignBudgetScheduleDto> {}
+export interface CampaignBudgetScheduleOutput
+    extends Required<CampaignBudgetScheduleDto> {}
 
-class CampaignBudgetSchedule extends Model<CampaignBudgetScheduleDto, CampaignBudgetScheduleInput> implements CampaignBudgetScheduleDto {
-    public id!: number;
-    public campaignId!: string;
-    public budgetId!: string;
-    public runDate!: string;
-    public dayOfTheWeek!: string;
-    public endHour!: string;
-    public endMinute!: string;
-    public startMinute!: string;
-    public startHour!: string;
-    public amount!: string;
-    public customerId!: string;
-    public loginCustomerId!: string;
-    public customerTimezone!: string;
-    public createdByUserId!: number;
-    public status!: string;
-    public dateExecuted!: string;
+class CampaignBudgetSchedule extends Model<
+    InferAttributes<CampaignBudgetSchedule>,
+    InferCreationAttributes<CampaignBudgetSchedule>
+> {
+    declare id: CreationOptional<number>;
+    declare campaignId: CreationOptional<string>;
+    declare budgetId: CreationOptional<string>;
+    declare runDate: CreationOptional<string>;
+    declare dayOfTheWeek: CreationOptional<string>;
+    declare endHour: CreationOptional<string>;
+    declare endMinute: CreationOptional<string>;
+    declare startMinute: CreationOptional<string>;
+    declare startHour: CreationOptional<string>;
+    declare amount: CreationOptional<string>;
+    declare customerId: CreationOptional<string>;
+    declare loginCustomerId: CreationOptional<string>;
+    declare customerTimezone: CreationOptional<string>;
+    declare createdByUserId: ForeignKey<User["id"]>;
+    declare status: CreationOptional<string>;
+    declare dateExecuted: CreationOptional<string>;
 
     // timestamps!
-    public readonly createdAt!: Date;
-    public readonly updatedAt!: Date;
-    public readonly deletedAt!: Date;
-
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-        // define association here
-    }
+    declare readonly createdAt: CreationOptional<Date>;
+    declare readonly updatedAt: CreationOptional<Date>;
+    declare readonly deletedAt: CreationOptional<Date>;
 }
 
 CampaignBudgetSchedule.init(
@@ -47,10 +52,10 @@ CampaignBudgetSchedule.init(
             primaryKey: true,
         },
         campaignId: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
         },
         budgetId: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
         },
         runDate: {
             allowNull: false,
@@ -82,34 +87,33 @@ CampaignBudgetSchedule.init(
         },
         customerId: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         loginCustomerId: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         customerTimezone: {
             allowNull: false,
             type: DataTypes.STRING,
         },
-        createdByUserId: DataTypes.INTEGER,
         dateExecuted: DataTypes.DATE,
         status: {
             type: DataTypes.STRING,
-            allowNull: true
+            allowNull: true,
         },
         createdAt: {
             allowNull: false,
-            type: DataTypes.DATE
+            type: DataTypes.DATE,
         },
         updatedAt: {
             allowNull: false,
-            type: DataTypes.DATE
+            type: DataTypes.DATE,
         },
         deletedAt: {
             allowNull: true,
-            type: DataTypes.DATE
-        }
+            type: DataTypes.DATE,
+        },
     },
     {
         sequelize: sequelizeConnection,
@@ -118,5 +122,7 @@ CampaignBudgetSchedule.init(
         paranoid: true,
     }
 );
+
+// CampaignBudgetSchedule.belongsTo(User, { targetKey: "id" });
 
 export default CampaignBudgetSchedule;
