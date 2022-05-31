@@ -46,7 +46,7 @@ const decodeAuthCredentials = async (token) => {
     return result.data;
 };
 
-class UsersController {
+export class UsersController {
     constructor() {
         this.login = this.login.bind(this);
         this.oAuthLogin = this.oAuthLogin.bind(this);
@@ -164,5 +164,3 @@ class UsersController {
         }
     }
 }
-
-export default new UsersController();

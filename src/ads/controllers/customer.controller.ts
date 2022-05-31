@@ -1,7 +1,7 @@
 import express from "express";
-const AdsApiBaseController = require("./base.controller")
+import {AdsApiBaseController} from "./base.controller";
 
-class AdsApiCustomerController extends AdsApiBaseController{
+export class AdsApiCustomerController extends AdsApiBaseController{
     /**
      * for the controller. Will be required to create
      * an instance of the controller
@@ -60,5 +60,3 @@ class AdsApiCustomerController extends AdsApiBaseController{
         res.json(data);
     };
 }
-
-module.exports = AdsApiCustomerController

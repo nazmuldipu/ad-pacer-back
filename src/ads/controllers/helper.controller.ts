@@ -1,11 +1,12 @@
 import express from "express";
+import {AdsApiBaseController} from "./base.controller";
+import * as dotenv from "dotenv";
+dotenv.config();
 const {Client} = require("../../clients/models");
 var SET_EMAIL_MESSAGE = require("../utils/mailBody");
 const mailTransporter = require("../utils/mail");
-const AdsApiBaseController = require("../../ads/controllers/base.controller")
-require('dotenv').config({ path: '../../.env' })
 
-class AdsApiHelperController extends AdsApiBaseController{
+export class AdsApiHelperController extends AdsApiBaseController{
     constructor() {
         super();
         this.sendMail = this.sendMail.bind(this)
@@ -65,5 +66,3 @@ class AdsApiHelperController extends AdsApiBaseController{
         console.log('Email sent to: ' + email)
     }
 }
-
-module.exports = AdsApiHelperController

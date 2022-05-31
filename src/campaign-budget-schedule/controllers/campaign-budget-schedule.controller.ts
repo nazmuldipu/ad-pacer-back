@@ -1,30 +1,37 @@
 import debug from "debug";
 import express from "express";
-const {Op} = require('sequelize');
-const axios = require("axios");
-const moment = require("moment-timezone");
+import {Op} from 'sequelize';
+import axios from "axios";
+import moment from "moment-timezone";
 import {CampaignBudgetSchedule} from "../models";
-const {User} = require('../../users/models')
-const {filterUpdateAbleModelKeys} = require("../../common/utils/utils");
-const campaignAccountingCtrl = require('../../campaign-accounting/controllers/campaign-accounting.controller');
-const AdsApiHelperNewController = require('../../ads/controllers/helper.controller');
+import {User} from '../../users/models'
+import {filterUpdateAbleModelKeys} from "../../common/utils/utils";
+import campaignAccountingCtrl from '../../campaign-accounting/controllers/campaign-accounting.controller';
+import AdsApiHelperNewController from '../../ads/controllers/helper.controller';
 const adsApiHelperNewCtrl = new AdsApiHelperNewController();
-const AdsApiCampaignController = require("../../ads/controllers/campaign.controller")
+import AdsApiCampaignController from "../../ads/controllers/campaign.controller"
 const adsApiCampaignCtrl = new AdsApiCampaignController()
-const AdsApiBaseController = require('../../ads/controllers/base.controller');
+import AdsApiBaseController from '../../ads/controllers/base.controller';
 const adsApiBaseCtrl = new AdsApiBaseController();
 
-const {getBudgetMutableURL, getCampaignCriteriaMutableURL} = require("../../common/utils/googleAdsQuery");
+import {getBudgetMutableURL, getCampaignCriteriaMutableURL} from "../../common/utils/googleAdsQuery";
 
-require('dotenv').config({ path: '../../../.env' })
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
 const log: debug.IDebugger = debug("app:campaign-budget-schedule-controller");
 
-class CampaignBudgetScheduleController {
+export class CampaignBudgetScheduleController {
     /**
      * for the controller. Will be required to create
      * an instance of the controller
      */
     constructor() {
+        this.index = this.index.bind(this)
+        this.store = this.store.bind(this)
+        this.update = this.update.bind(this)
+        this.delete = this.delete.bind(this)
         this.updateSingleCampaignBudgetSchedule = this.updateSingleCampaignBudgetSchedule.bind(this)
         this.fireDailyCampaignBudgetScheduleEventJob = this.fireDailyCampaignBudgetScheduleEventJob.bind(this)
         this.runRelatedJobTask = this.runRelatedJobTask.bind(this)
@@ -35,8 +42,6 @@ class CampaignBudgetScheduleController {
         this.updateCampaignAccounting = this.updateCampaignAccounting.bind(this)
         this.getCampaignLastChangeEvent = this.getCampaignLastChangeEvent.bind(this)
         this.associateCampaignTask = this.associateCampaignTask.bind(this)
-        this.store = this.store.bind(this)
-        this.update = this.update.bind(this)
     }
 
     /**
@@ -578,5 +583,3 @@ class CampaignBudgetScheduleController {
         }
     }
 }
-
-module.exports = CampaignBudgetScheduleController;

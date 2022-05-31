@@ -1,13 +1,13 @@
 const axios = require("axios");
 import express from "express";
-const AdsApiBaseController = require("./base.controller")
-const AdsApiScheduleController = require("./schedule.controller")
+import {AdsApiBaseController} from "./base.controller";
+import {AdsApiScheduleController} from "./schedule.controller";
 const adsApiScheduleCtrl = new AdsApiScheduleController();
 const moment = require("moment-timezone");
 
 import { getCampaignMutableURL } from "../../common/utils/googleAdsQuery";
 
-class AdsApiCampaignController extends AdsApiBaseController{
+export class AdsApiCampaignController extends AdsApiBaseController{
     /**
      * for the controller. Will be required to create
      * an instance of the controller
@@ -404,5 +404,3 @@ class AdsApiCampaignController extends AdsApiBaseController{
         }
     }
 }
-
-module.exports = AdsApiCampaignController

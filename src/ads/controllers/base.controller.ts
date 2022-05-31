@@ -5,7 +5,7 @@ import { getAccessTokenGettableURL } from "../../common/utils/googleAdsQuery";
 import { GoogleAdsApi } from "google-ads-api";
 import type { Customer } from "../../clients/dto/customer.dto";
 
-class AdsApiBaseController {
+export class AdsApiBaseController {
     /**
      * for the controller. Will be required to create
      * an instance of the controller
@@ -217,5 +217,3 @@ class AdsApiBaseController {
         }
     }
 }
-
-module.exports = AdsApiBaseController

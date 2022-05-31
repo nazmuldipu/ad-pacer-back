@@ -3,7 +3,7 @@ import {CampaignAccounting} from "../models";
 
 const log: debug.IDebugger = debug("app:campaign-accounting-controller");
 
-class CampaignAccountingController {
+export class CampaignAccountingController {
     constructor() {
         this.findOneByCampaignId = this.findOneByCampaignId.bind(this);
     }
@@ -30,5 +30,3 @@ class CampaignAccountingController {
         }
     }
 }
-
-export default new CampaignAccountingController();

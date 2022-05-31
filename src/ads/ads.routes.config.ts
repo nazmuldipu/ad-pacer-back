@@ -1,15 +1,12 @@
 import express from "express";
 import { CommonRoutesConfig } from "../common/common.routes.config";
-import ClientController from "../clients/controllers/clients.controller";
-// import ClientController from "../clients/controllers/clients.controller";
-const AdsApiBaseController = require("./controllers/base.controller");
-const adsApiBaseCtrl = new AdsApiBaseController();
-import UserController from '../users/controllers/users.controller';
-const AdsApiCampaignController = require('./controllers/campaign.controller');
+import {UsersController} from "../users/controllers/users.controller";
+const usersCtrl = new UsersController();
+import {AdsApiCampaignController} from './controllers/campaign.controller';
 const adsApiCampaignCtrl = new AdsApiCampaignController();
-const AdsApiCustomerController = require('./controllers/customer.controller');
+import {AdsApiCustomerController} from './controllers/customer.controller';
 const adsApiCustomerCtrl = new AdsApiCustomerController();
-const AdsApiScheduleController = require('./controllers/schedule.controller');
+import {AdsApiScheduleController} from './controllers/schedule.controller';
 const adsApiScheduleCtrl = new AdsApiScheduleController();
 
 export class AdsRoutes extends CommonRoutesConfig {
@@ -18,7 +15,7 @@ export class AdsRoutes extends CommonRoutesConfig {
     }
 
     configureRoutes() {
-        this.app.route("/ads-api/oauth2/login").post(UserController.oAuthLogin);
+        this.app.route("/ads-api/oauth2/login").post(usersCtrl.oAuthLogin);
         this.app.route("/ads-api/clients").get(adsApiCustomerCtrl.getAllClients);
         this.app.route("/ads-api/campaigns").get(adsApiCampaignCtrl.getAllCampaigns);
         this.app.route("/ads-api/get-criterion").get(adsApiScheduleCtrl.getCriterion);

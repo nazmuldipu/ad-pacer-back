@@ -1,9 +1,9 @@
 const axios = require("axios");
 import express from "express";
-const AdsApiBaseController = require("./base.controller")
+import AdsApiBaseController from "./base.controller";
 import { getCampaignCriteriaMutableURL } from "../../common/utils/googleAdsQuery";
 
-class AdsApiScheduleController extends AdsApiBaseController{
+export class AdsApiScheduleController extends AdsApiBaseController{
     /**
      * for the controller. Will be required to create
      * an instance of the controller
@@ -154,5 +154,3 @@ class AdsApiScheduleController extends AdsApiBaseController{
         }
     };
 }
-
-module.exports = AdsApiScheduleController

@@ -1,5 +1,6 @@
 import { CommonRoutesConfig } from "../common/common.routes.config";
-import ClientController from "./controllers/clients.controller";
+import {ClientController} from "./controllers/clients.controller";
+const clientCtrl = new ClientController();
 import ClientMiddleware from "./middleware/clients.middleware";
 import express from "express";
 
@@ -11,10 +12,10 @@ export class ClientRoutes extends CommonRoutesConfig {
     configureRoutes() {
         this.app
             .route("/ads-api/settings-clients")
-            .get(ClientController.clientSettings)
+            .get(clientCtrl.clientSettings)
             .post(
                 ClientMiddleware.validateRequiredClientBodyFields,
-                ClientController.createClientSettings
+                clientCtrl.createClientSettings
             );
         return this.app;
     }

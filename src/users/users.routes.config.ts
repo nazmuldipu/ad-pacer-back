@@ -1,5 +1,6 @@
 import { CommonRoutesConfig } from "../common/common.routes.config";
-import UsersController from "./controllers/users.controller";
+import {UsersController} from "./controllers/users.controller";
+const userCtrl = new UsersController();
 import UsersMiddleware from "./middleware/users.middleware";
 import express from "express";
 
@@ -11,29 +12,29 @@ export class UsersRoutes extends CommonRoutesConfig {
 	configureRoutes() {
 		this.app
 			.route("/user")
-			.get(UsersController.listUsers)
+			.get(userCtrl.listUsers)
 			.post(
 				UsersMiddleware.validateRequiredUserBodyFields,
 				UsersMiddleware.validateSameEmailDoesntExist,
-				UsersController.createUser
+				userCtrl.createUser
 			);
 
 		this.app.param("userId", UsersMiddleware.extractUserId);
 		this.app
 			.route("/user/:userId")
 			.all(UsersMiddleware.validateUserExists)
-			.get(UsersController.getUserById)
-			.delete(UsersController.removeUser);
+			.get(userCtrl.getUserById)
+			.delete(userCtrl.removeUser);
 
 		this.app.put("/user/:userId", [
 			UsersMiddleware.validateRequiredUserBodyFields,
 			UsersMiddleware.validateSameEmailBelongToSameUser,
-			UsersController.put,
+			userCtrl.put,
 		]);
 
 		this.app.patch("/user/:userId", [
 			UsersMiddleware.validatePatchEmail,
-			UsersController.patch,
+			userCtrl.patch,
 		]);
 
 		return this.app;

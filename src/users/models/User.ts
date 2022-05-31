@@ -4,10 +4,9 @@ import {
     InferAttributes,
     InferCreationAttributes,
     Model,
-    NonAttribute,
     Optional,
 } from "sequelize";
-import { CampaignBudgetSchedule } from "../../campaign-budget-schedule/models";
+
 import sequelizeConnection from "../../db/config";
 import { UserDto } from "../dto/user.dto";
 
