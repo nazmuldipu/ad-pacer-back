@@ -56,7 +56,6 @@ class AdsApiCustomerController extends AdsApiBaseController{
         next: express.NextFunction
     )  {
         const data = await super.getAllClients(req, res, next)
-        console.log('data', data)
         res.json(data);
     };
 }
