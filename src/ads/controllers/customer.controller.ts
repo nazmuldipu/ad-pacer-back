@@ -1,29 +1,13 @@
 import express from "express";
-import {AdsApiBaseController} from "./base.controller";
+import AdsApiBaseController from "./base.controller";
 
-export class AdsApiCustomerController extends AdsApiBaseController{
+export default class AdsApiCustomerController extends AdsApiBaseController{
     /**
      * for the controller. Will be required to create
      * an instance of the controller
      */
     constructor() {
         super();
-    }
-
-    /**
-     *
-     * @param req
-     * @param res
-     * @param next
-     * @returns get accessible customer from ads api
-     *
-     */
-    async getCustomer(
-        req: express.Request,
-        res: express.Response,
-        next: express.NextFunction
-    ) {
-        return super.getCustomer(req, res, next)
     }
 
     /**

@@ -1,13 +1,13 @@
 const axios = require("axios");
 import express from "express";
-import {AdsApiBaseController} from "./base.controller";
-import {AdsApiScheduleController} from "./schedule.controller";
+import AdsApiBaseController from "./base.controller";
+import AdsApiScheduleController from "./schedule.controller";
 const adsApiScheduleCtrl = new AdsApiScheduleController();
 const moment = require("moment-timezone");
 
 import { getCampaignMutableURL } from "../../common/utils/googleAdsQuery";
 
-export class AdsApiCampaignController extends AdsApiBaseController{
+export default class AdsApiCampaignController extends AdsApiBaseController{
     /**
      * for the controller. Will be required to create
      * an instance of the controller
@@ -39,7 +39,7 @@ export class AdsApiCampaignController extends AdsApiBaseController{
     ) {
         try {
             const query = "SELECT campaign_budget.id,campaign_budget.amount_micros, campaign_budget.name, customer.time_zone, customer.resource_name, customer.manager, customer.id, customer.descriptive_name,metrics.cost_micros, FROM campaign";
-            const customer = await super.getCustomer(req, res, next);
+            const customer = await super.getCustomer(req);
             const result = await customer.query(query);
             res.json(result);
         } catch (err) {
@@ -70,7 +70,7 @@ export class AdsApiCampaignController extends AdsApiBaseController{
             const {campaignId, timezone} = req.query
             if (campaignId) {
                 let query = `SELECT customer.descriptive_name, customer.id, customer.time_zone FROM customer WHERE customer.id = ${req.query.customerId}`;
-                const customer = await super.getCustomer(req, res, next);
+                const customer = await super.getCustomer(req);
                 customerData = await customer.query(query);
 
                 singleCampaignQuery = `AND campaign.id = ${campaignId}`;
@@ -85,7 +85,7 @@ export class AdsApiCampaignController extends AdsApiBaseController{
             const campaignBudgetQuery = "campaign_budget.id, campaign_budget.amount_micros, campaign_budget.total_amount_micros, campaign_budget.type, campaign_budget.explicitly_shared, campaign_budget.has_recommended_budget, campaign_budget.period, campaign_budget.recommended_budget_amount_micros,";
             let query = `SELECT campaign.campaign_budget, ${campaignBudgetQuery} campaign.id, campaign.labels, campaign.name, campaign.resource_name, campaign.payment_mode, campaign.status, campaign.start_date, campaign.end_date, metrics.cost_micros FROM campaign WHERE customer.id = ${req.query.customerId} ${singleCampaignQuery} ${timezoneQuery}`;
 
-            const customerAgain = await super.getCustomer(req, res, next);
+            const customerAgain = await super.getCustomer(req);
             const campaigns = await customerAgain.query(query);
             const object = {
                 campaigns: [],
@@ -163,7 +163,7 @@ export class AdsApiCampaignController extends AdsApiBaseController{
         const timezone = req?.query.timezone
         req.body.campaignId  = req?.query.campaignId
         let history = await this.getSingleCampaignHistory(req, timezone, 50)
-        history = history.map((item) => {
+        let historyData = history.map((item) => {
             const { change_event, campaign } = item;
             let budgetAmount = null;
             let name = "__";
@@ -190,8 +190,8 @@ export class AdsApiCampaignController extends AdsApiBaseController{
                 changedField: changedField
             };
         });
-        history = history.filter(his => his.changedField === 'amount_micros') //filtering for getting only amount micros field changed
-        return res.json(history)
+        historyData = historyData.filter(his => his['changedField'] === 'amount_micros') //filtering for getting only amount micros field changed
+        return res.json(historyData)
     };
 
     /**

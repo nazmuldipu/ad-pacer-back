@@ -46,7 +46,7 @@ const decodeAuthCredentials = async (token) => {
     return result.data;
 };
 
-export class UsersController {
+export default class UsersController {
     constructor() {
         this.login = this.login.bind(this);
         this.oAuthLogin = this.oAuthLogin.bind(this);

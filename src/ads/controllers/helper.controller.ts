@@ -1,12 +1,12 @@
 import express from "express";
-import {AdsApiBaseController} from "./base.controller";
+import AdsApiBaseController from "./base.controller";
 import * as dotenv from "dotenv";
 dotenv.config();
 const {Client} = require("../../clients/models");
 var SET_EMAIL_MESSAGE = require("../utils/mailBody");
 const mailTransporter = require("../utils/mail");
 
-export class AdsApiHelperController extends AdsApiBaseController{
+export default class AdsApiHelperController extends AdsApiBaseController{
     constructor() {
         super();
         this.sendMail = this.sendMail.bind(this)

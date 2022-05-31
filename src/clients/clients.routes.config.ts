@@ -1,8 +1,8 @@
+import express from "express";
 import { CommonRoutesConfig } from "../common/common.routes.config";
-import {ClientController} from "./controllers/clients.controller";
+import ClientController from "./controllers/clients.controller";
 const clientCtrl = new ClientController();
 import ClientMiddleware from "./middleware/clients.middleware";
-import express from "express";
 
 export class ClientRoutes extends CommonRoutesConfig {
     constructor(app: express.Application) {

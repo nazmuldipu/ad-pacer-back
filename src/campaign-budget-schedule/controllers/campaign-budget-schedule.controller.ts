@@ -6,7 +6,8 @@ import moment from "moment-timezone";
 import {CampaignBudgetSchedule} from "../models";
 import {User} from '../../users/models'
 import {filterUpdateAbleModelKeys} from "../../common/utils/utils";
-import campaignAccountingCtrl from '../../campaign-accounting/controllers/campaign-accounting.controller';
+import CampaignAccountingController from '../../campaign-accounting/controllers/campaign-accounting.controller';
+const campaignAccountingCtrl = new CampaignAccountingController();
 import AdsApiHelperNewController from '../../ads/controllers/helper.controller';
 const adsApiHelperNewCtrl = new AdsApiHelperNewController();
 import AdsApiCampaignController from "../../ads/controllers/campaign.controller"
@@ -17,12 +18,14 @@ const adsApiBaseCtrl = new AdsApiBaseController();
 import {getBudgetMutableURL, getCampaignCriteriaMutableURL} from "../../common/utils/googleAdsQuery";
 
 import * as dotenv from "dotenv";
+import {CampaignBudgetScheduleDto} from "../dto/campaign-budget-schedule.dto";
+import CampaignBudgetScheduleDao from "../daos/campaign-budget-schedule.dao";
 
 dotenv.config();
 
 const log: debug.IDebugger = debug("app:campaign-budget-schedule-controller");
 
-export class CampaignBudgetScheduleController {
+export default class CampaignBudgetScheduleController {
     /**
      * for the controller. Will be required to create
      * an instance of the controller
@@ -275,7 +278,6 @@ export class CampaignBudgetScheduleController {
                 }
             }
 
-            let history = ''
             if(parseInt(amount) > 0) {
                 //Todo: patch Campaign accounting
                 // const campaignAccount = await campaignAccountingCtrl.findOneByCampaignId(campaignId)
@@ -311,7 +313,7 @@ export class CampaignBudgetScheduleController {
 
             //Todo: get campaign history and sent it to the client team Emails - DONE
             //Todo: Have an issue, not returning latest history!!
-            history = await this.getCampaignLastChangeEvent(req, cbsItem)
+            let history = await this.getCampaignLastChangeEvent(req, cbsItem)
 
             //Todo: Send email to associate user about the job - DONE
             console.log('Sending email to team emails...')
@@ -328,7 +330,7 @@ export class CampaignBudgetScheduleController {
     async getCampaignLastChangeEvent(req, schedule) {
         console.log('Getting campaign change history..')
         let history = await adsApiCampaignCtrl.getSingleCampaignHistory(req, schedule.timezone);
-        history = history.map((item) => {
+        let historyData = history.map((item) => {
             const { change_event, campaign } = item;
             let budgetAmount = null;
             let name = "__";
@@ -355,8 +357,8 @@ export class CampaignBudgetScheduleController {
                 changedField: changedField
             };
         });
-        history = history.filter(his => his.changedField === 'amount_micros') //filtering for getting only amount micros field changed
-        return history
+        historyData = historyData.filter(his => his['changedField'] === 'amount_micros') //filtering for getting only amount micros field changed
+        return historyData
     }
 
     /**
@@ -520,7 +522,7 @@ export class CampaignBudgetScheduleController {
      */
     async updateSingleCampaignBudgetSchedule(element) {
         try {
-            let item = await CampaignBudgetSchedule.findOne({ where: { id: element.id } });
+            let item: CampaignBudgetSchedule = await CampaignBudgetSchedule.findOne({ where: { id: element.id } });
             if(item) {
                 const updateAbleObject = {
                     body: null
@@ -562,12 +564,12 @@ export class CampaignBudgetScheduleController {
 
         const campaignAccount = await campaignAccountingCtrl.findOneByCampaignId(campaignId)
         if(campaignAccount) {
-            campaignAccount.totalBudgetAmount = totalBudgetAmount
-            campaignAccount.totalCampaignRunDays = totalCampaignRunDays
-            campaignAccount.totalCampaignPassedDays = totalCampaignPassedDays
-            campaignAccount.totalCampaignRemainingDays = totalCampaignRemainingDays
-            campaignAccount.totalCostAmount = totalCostAmount
-            campaignAccount.status = status
+            campaignAccount['totalBudgetAmount'] = totalBudgetAmount.toString()
+            campaignAccount['totalCampaignRunDays'] = totalCampaignRunDays.toString()
+            campaignAccount['totalCampaignPassedDays'] = totalCampaignPassedDays.toString()
+            campaignAccount['totalCampaignRemainingDays'] = totalCampaignRemainingDays.toString()
+            campaignAccount['totalCostAmount'] = totalCostAmount.toString()
+            campaignAccount['status'] = status
             await campaignAccount.save()
         } else {
             const data = {

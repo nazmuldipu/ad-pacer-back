@@ -3,7 +3,7 @@ import express from "express";
 import AdsApiBaseController from "./base.controller";
 import { getCampaignCriteriaMutableURL } from "../../common/utils/googleAdsQuery";
 
-export class AdsApiScheduleController extends AdsApiBaseController{
+export default class AdsApiScheduleController extends AdsApiBaseController{
     /**
      * for the controller. Will be required to create
      * an instance of the controller
@@ -29,7 +29,7 @@ export class AdsApiScheduleController extends AdsApiBaseController{
     ) {
         try {
             const query = "SELECT campaign_criterion.ad_schedule.end_hour, campaign_criterion.ad_schedule.end_minute, campaign_criterion.ad_schedule.start_hour, campaign_criterion.ad_schedule.start_minute, campaign_criterion.ad_schedule.day_of_week FROM campaign_criterion WHERE campaign.id = 16530339838";
-            const customer = await super.getCustomer(req, res, next);
+            const customer = await super.getCustomer(req);
             const result = await customer.query(query);
             res.json(result);
         } catch (err) {
@@ -51,7 +51,7 @@ export class AdsApiScheduleController extends AdsApiBaseController{
         console.log('campaignId',campaignId)
         try {
             const query = `SELECT campaign_criterion.criterion_id, campaign_criterion.ad_schedule.end_hour, campaign_criterion.ad_schedule.end_minute, campaign_criterion.ad_schedule.start_hour, campaign_criterion.ad_schedule.start_minute, campaign_criterion.ad_schedule.day_of_week FROM campaign_criterion WHERE campaign.id = ${campaignId}`;
-            const customer = await super.getCustomer(req, next);
+            const customer = await super.getCustomer(req);
             return await customer.query(query);
         } catch (err) {
             throw err;

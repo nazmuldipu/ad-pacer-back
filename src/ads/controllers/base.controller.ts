@@ -5,7 +5,7 @@ import { getAccessTokenGettableURL } from "../../common/utils/googleAdsQuery";
 import { GoogleAdsApi } from "google-ads-api";
 import type { Customer } from "../../clients/dto/customer.dto";
 
-export class AdsApiBaseController {
+export default class AdsApiBaseController {
     /**
      * for the controller. Will be required to create
      * an instance of the controller
@@ -85,9 +85,7 @@ export class AdsApiBaseController {
      *
      */
     async getCustomer(
-        req: express.Request,
-        res: express.Response,
-        next: express.NextFunction
+        req: express.Request
     ) {
         const client: GoogleAdsApi = new GoogleAdsApi(this.getOath2Params());
         let customerId: string = null;
@@ -181,7 +179,7 @@ export class AdsApiBaseController {
                     customerId =
                         resourceNames[i];
                 try {
-                    const customer = await this.getCustomer(req, res, next);
+                    const customer = await this.getCustomer(req);
                     const newCustomers: Customer[] = await customer.query(query);
                     if (newCustomers && newCustomers.length) {
                         let filteredCustomers = [];

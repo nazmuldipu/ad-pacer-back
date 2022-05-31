@@ -1,6 +1,6 @@
 import express from "express";
 import { CommonRoutesConfig } from "../common/common.routes.config";
-import {CampaignAccountingController} from "./controllers/campaign-accounting.controller";
+import CampaignAccountingController from "./controllers/campaign-accounting.controller";
 const campaignAccountingCtrl = new CampaignAccountingController();
 export class CampaignAccountingRoutes extends CommonRoutesConfig {
     constructor(app: express.Application) {

@@ -10,7 +10,7 @@ import { Client } from "../models";
 
 const log: debug.IDebugger = debug("app:client-controller");
 
-export class ClientController {
+export default class ClientController {
     async clientSettings(
         req: express.Request,
         res: express.Response,

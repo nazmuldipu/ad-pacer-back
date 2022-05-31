@@ -1,6 +1,5 @@
-import { Dialect, Sequelize } from 'sequelize'
 import config from "config";
-
+import { Dialect, Sequelize } from 'sequelize'
 const dbName: string = config.get("database");
 const dbUser: string = config.get("username");
 const dbHost: string = config.get("host");

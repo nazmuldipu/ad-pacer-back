@@ -2,11 +2,11 @@ import express from "express";
 import { CommonRoutesConfig } from "../common/common.routes.config";
 import {UsersController} from "../users/controllers/users.controller";
 const usersCtrl = new UsersController();
-import {AdsApiCampaignController} from './controllers/campaign.controller';
+import AdsApiCampaignController from './controllers/campaign.controller';
 const adsApiCampaignCtrl = new AdsApiCampaignController();
-import {AdsApiCustomerController} from './controllers/customer.controller';
+import AdsApiCustomerController from './controllers/customer.controller';
 const adsApiCustomerCtrl = new AdsApiCustomerController();
-import {AdsApiScheduleController} from './controllers/schedule.controller';
+import AdsApiScheduleController from './controllers/schedule.controller';
 const adsApiScheduleCtrl = new AdsApiScheduleController();
 
 export class AdsRoutes extends CommonRoutesConfig {
