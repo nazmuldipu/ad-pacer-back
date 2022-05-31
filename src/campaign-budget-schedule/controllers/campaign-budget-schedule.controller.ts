@@ -1,9 +1,9 @@
 import debug from "debug";
+import express from "express";
 const {Op} = require('sequelize');
 const axios = require("axios");
 const moment = require("moment-timezone");
 import {CampaignBudgetSchedule} from "../models";
-import express from "express";
 const {User} = require('../../users/models')
 const {filterUpdateAbleModelKeys} = require("../../common/utils/utils");
 const campaignAccountingCtrl = require('../../campaign-accounting/controllers/campaign-accounting.controller');
@@ -35,6 +35,8 @@ class CampaignBudgetScheduleController {
         this.updateCampaignAccounting = this.updateCampaignAccounting.bind(this)
         this.getCampaignLastChangeEvent = this.getCampaignLastChangeEvent.bind(this)
         this.associateCampaignTask = this.associateCampaignTask.bind(this)
+        this.store = this.store.bind(this)
+        this.update = this.update.bind(this)
     }
 
     /**
@@ -577,4 +579,4 @@ class CampaignBudgetScheduleController {
     }
 }
 
-export default new CampaignBudgetScheduleController();
+module.exports = CampaignBudgetScheduleController;

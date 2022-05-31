@@ -1,6 +1,7 @@
 import express from "express";
 import { CommonRoutesConfig } from "../common/common.routes.config";
-import campaignBudgetScheduleCtrl from "./controllers/campaign-budget-schedule.controller";
+const CampaignBudgetScheduleController = require("./controllers/campaign-budget-schedule.controller");
+const campaignBudgetScheduleCtrl = new CampaignBudgetScheduleController();
 
 export class CampaignBudgetScheduleRoutes extends CommonRoutesConfig {
     constructor(app: express.Application) {
