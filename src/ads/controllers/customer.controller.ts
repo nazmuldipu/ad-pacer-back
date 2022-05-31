@@ -8,8 +8,7 @@ export default class AdsApiCustomerController extends AdsApiBaseController{
      */
     constructor() {
         super();
-        this.getAllClients = this.getAllClients.bind(this)
-        this.getAccessibleCustomers = this.getAccessibleCustomers.bind(this)
+        this.getCustomerAllClients = this.getCustomerAllClients.bind(this)
     }
 
     /**
@@ -36,7 +35,7 @@ export default class AdsApiCustomerController extends AdsApiBaseController{
      * @returns getAllClients by API route call
      *
      */
-    async getAllClients(
+    async getCustomerAllClients(
         req: express.Request,
         res: express.Response,
         next: express.NextFunction
