@@ -1,6 +1,7 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, Model, Optional, Association, BelongsTo } from "sequelize";
 import sequelizeConnection from "../../db/config";
 import { CampaignBudgetScheduleDto } from "../dto/campaign-budget-schedule.dto";
+import { User } from "../../users/models/index";
 
 export interface CampaignBudgetScheduleInput extends Optional<CampaignBudgetScheduleDto, "id"> {}
 
@@ -34,8 +35,22 @@ class CampaignBudgetSchedule extends Model<CampaignBudgetScheduleDto, CampaignBu
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+    // static associations: {
+    //     // define association here
+    //     user: Association<User, CampaignBudgetSchedule>
+    // }
+
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
     static associate(models) {
         // define association here
+        this.hasOne(models.User, {
+            foreignKey: 'createdByUserId',
+            as: 'user'
+        })
     }
 }
 
@@ -118,5 +133,7 @@ CampaignBudgetSchedule.init(
         paranoid: true,
     }
 );
+
+CampaignBudgetSchedule.hasOne(User, {sourceKey: 'id', foreignKey: 'createdByUserId'})
 
 export default CampaignBudgetSchedule;
