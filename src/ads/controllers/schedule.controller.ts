@@ -1,5 +1,5 @@
 const axios = require("axios");
-import express from "express";
+import * as express from "express";
 import AdsApiBaseController from "./base.controller";
 import { getCampaignCriteriaMutableURL } from "../../common/utils/googleAdsQuery";
 

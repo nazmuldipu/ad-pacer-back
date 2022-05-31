@@ -1,5 +1,5 @@
 import axios from "axios";
-import express from "express";
+import * as express from "express";
 import { Oath2Params, AxiosConfig } from "../dto";
 import { getAccessTokenGettableURL } from "../../common/utils/googleAdsQuery";
 import { GoogleAdsApi } from "google-ads-api";
@@ -169,7 +169,6 @@ export default class AdsApiBaseController {
                     return str.replace(/['customers/' ]+/g, " ").trim();
                 });
             
-            
             let customers = [];
             let customerId = null;
             let clientCustomersIds = [];
@@ -209,6 +208,7 @@ export default class AdsApiBaseController {
                     continue;
                 }
             }
+
             return { customers, customerId };
         } catch (error) {
             next(error);

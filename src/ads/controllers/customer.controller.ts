@@ -1,4 +1,4 @@
-import express from "express";
+import * as express from "express";
 import AdsApiBaseController from "./base.controller";
 
 export default class AdsApiCustomerController extends AdsApiBaseController{
@@ -8,6 +8,8 @@ export default class AdsApiCustomerController extends AdsApiBaseController{
      */
     constructor() {
         super();
+        this.getAllClients = this.getAllClients.bind(this)
+        this.getAccessibleCustomers = this.getAccessibleCustomers.bind(this)
     }
 
     /**
@@ -40,7 +42,6 @@ export default class AdsApiCustomerController extends AdsApiBaseController{
         next: express.NextFunction
     )  {
         const data = await super.getAllClients(req, res, next)
-        console.log('data', data)
         res.json(data);
     };
 }

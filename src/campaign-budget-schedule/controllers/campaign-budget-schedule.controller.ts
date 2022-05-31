@@ -1,8 +1,8 @@
 import debug from "debug";
-import express from "express";
+import * as express from "express";
 import {Op} from 'sequelize';
 import axios from "axios";
-import moment from "moment-timezone";
+import * as moment from "moment-timezone";
 import {CampaignBudgetSchedule} from "../models";
 import {User} from '../../users/models'
 import {filterUpdateAbleModelKeys} from "../../common/utils/utils";
@@ -317,7 +317,7 @@ export default class CampaignBudgetScheduleController {
 
             //Todo: Send email to associate user about the job - DONE
             console.log('Sending email to team emails...')
-            await adsApiHelperNewCtrl.sendMail(req, cbsItem, history)
+            await adsApiHelperNewCtrl.sendMail(cbsItem, history)
         }
         console.log(`End: ${cbsItem.id}`)
     }

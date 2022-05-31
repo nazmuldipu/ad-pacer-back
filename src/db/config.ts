@@ -1,4 +1,4 @@
-import config from "config";
+import * as config from "config";
 import { Dialect, Sequelize } from 'sequelize'
 const dbName: string = config.get("database");
 const dbUser: string = config.get("username");

@@ -1,6 +1,6 @@
 import express from "express";
 import { CommonRoutesConfig } from "../common/common.routes.config";
-import {UsersController} from "../users/controllers/users.controller";
+import UsersController from "../users/controllers/users.controller";
 const usersCtrl = new UsersController();
 import AdsApiCampaignController from './controllers/campaign.controller';
 const adsApiCampaignCtrl = new AdsApiCampaignController();

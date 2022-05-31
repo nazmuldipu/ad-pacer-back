@@ -1,4 +1,4 @@
-import express from "express";
+import * as express from "express";
 import AdsApiBaseController from "./base.controller";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -14,14 +14,12 @@ export default class AdsApiHelperController extends AdsApiBaseController{
     }
 
     /**
-     * @param req
      * @param schedule
      * @param history
      * sends email to campaign associate user
      * @returns by API route call
      */
     async sendMail(
-        req: express.Request,
         schedule,
         history
     ) {

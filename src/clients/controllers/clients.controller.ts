@@ -1,6 +1,6 @@
 import express from "express";
 import clientService from "../services/clients.service";
-const AdsApiBaseController = require("../../ads/controllers/base.controller")
+import AdsApiBaseController from "../../ads/controllers/base.controller";
 const adsApiBaseCtrl = new AdsApiBaseController();
 import debug from "debug";
 import { ClientDto } from "../dto/client.dto";
