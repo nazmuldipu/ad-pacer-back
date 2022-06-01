@@ -1,11 +1,11 @@
 import express from "express";
-import * as http from "http";
-import * as winston from "winston";
-import * as expressWinston from "express-winston";
+import  http from "http";
+import  winston from "winston";
+import  expressWinston from "express-winston";
 import cors from "cors";
 import config from "config";
 import debug from "debug";
-import * as dotenv from "dotenv";
+import  dotenv from "dotenv";
 
 dotenv.config();
 
@@ -13,6 +13,8 @@ dotenv.config();
 import { CommonRoutesConfig } from "./common/common.routes.config";
 import { UsersRoutes } from "./users/users.routes.config";
 import { ClientRoutes } from "./clients/clients.routes.config";
+import { CampaignAccountingRoutes } from "./campaign-accounting/campaign-accounting.routes.config";
+import { CampaignBudgetScheduleRoutes } from "./campaign-budget-schedule/campaign-budget-schedule.routes.config";
 import { AdsRoutes } from "./ads/ads.routes.config";
 import dbInit from './db/init'
 import ValidateAuthRoute from './common/auth.routes.config';
@@ -43,6 +45,8 @@ app.use(ValidateAuthRoute);
 
 routes.push(new UsersRoutes(app));
 routes.push(new ClientRoutes(app));
+routes.push(new CampaignAccountingRoutes(app));
+routes.push(new CampaignBudgetScheduleRoutes(app));
 routes.push(new AdsRoutes(app));
 
 const runningMessage = `Server running at http://localhost:${HTTP_SERVER_PORT}`;

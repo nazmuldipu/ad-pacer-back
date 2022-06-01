@@ -1,11 +1,11 @@
 import axios from "axios";
-import express from "express";
+import  express from "express";
 import { Oath2Params, AxiosConfig } from "../dto";
 import { getAccessTokenGettableURL } from "../../common/utils/googleAdsQuery";
 import { GoogleAdsApi } from "google-ads-api";
 import type { Customer } from "../../clients/dto/customer.dto";
 
-class AdsApiBaseController {
+export default class AdsApiBaseController {
     /**
      * for the controller. Will be required to create
      * an instance of the controller
@@ -85,9 +85,7 @@ class AdsApiBaseController {
      *
      */
     async getCustomer(
-        req: express.Request,
-        res: express.Response,
-        next: express.NextFunction
+        req: express.Request
     ) {
         const client: GoogleAdsApi = new GoogleAdsApi(this.getOath2Params());
         let customerId: string = null;
@@ -171,7 +169,6 @@ class AdsApiBaseController {
                     return str.replace(/['customers/' ]+/g, " ").trim();
                 });
             
-            
             let customers = [];
             let customerId = null;
             let clientCustomersIds = [];
@@ -181,7 +178,7 @@ class AdsApiBaseController {
                     customerId =
                         resourceNames[i];
                 try {
-                    const customer = await this.getCustomer(req, res, next);
+                    const customer = await this.getCustomer(req);
                     const newCustomers: Customer[] = await customer.query(query);
                     if (newCustomers && newCustomers.length) {
                         let filteredCustomers = [];
@@ -211,11 +208,10 @@ class AdsApiBaseController {
                     continue;
                 }
             }
+
             return { customers, customerId };
         } catch (error) {
             next(error);
         }
     }
 }
-
-module.exports = AdsApiBaseController

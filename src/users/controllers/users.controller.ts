@@ -5,6 +5,9 @@ import usersService from "../services/users.service";
 // import argon2 from "argon2";
 import debug from "debug";
 import { UserDto } from "../dto/user.dto";
+import {google} from "googleapis";
+import UsersMiddleware from "../middleware/users.middleware";
+import axios from "axios";
 
 const log: debug.IDebugger = debug("app:users-controller");
 //get access tokens
@@ -32,7 +35,23 @@ const generateRefreshToken = (user: UserDto) => {
     return refreshToken;
 };
 
-class UsersController {
+const getRedirectURL = ({ hostname }) => {
+    return process.env.REDIRECT_URL;
+    // return 'http://localhost:3000'
+};
+
+const decodeAuthCredentials = async (token) => {
+    const url = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`;
+    const result = await axios.get(url);
+    return result.data;
+};
+
+export default class UsersController {
+    constructor() {
+        this.login = this.login.bind(this);
+        this.oAuthLogin = this.oAuthLogin.bind(this);
+    }
+
     async listUsers(req: express.Request, res: express.Response) {
         const users = await usersService.list(100, 0);
         res.status(200).send(users);
@@ -105,6 +124,43 @@ class UsersController {
             next(err);
         }
     }
-}
 
-export default new UsersController();
+    async oAuthLogin(
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+    ) {
+        try {
+            const oauth2client = new google.auth.OAuth2(
+                process.env.CLIENT_ID,
+                process.env.CLIENT_SECRET,
+                getRedirectURL(req)
+            );
+            const { tokens } = await oauth2client.getToken(req.body.code);
+            const user = await decodeAuthCredentials(tokens.access_token);
+            const isValidEmail = await UsersMiddleware.validateEmail(
+                user.email
+            );
+
+            req.body.email = user.email;
+            req.body.refreshToken = tokens.refresh_token;
+
+            if (!isValidEmail) {
+                req.body.name = user.name;
+                const modelObj = await usersService.create(req.body);
+            }
+            const { accessToken, userObj } = await this.login(
+                req,
+                res,
+                next
+            );
+            user.accessToken = accessToken;
+            user.refreshToken = userObj.refreshToken;
+            user.loginUserId = userObj.id;
+
+            res.json({ ...tokens, user });
+        } catch (err) {
+            next(err);
+        }
+    }
+}

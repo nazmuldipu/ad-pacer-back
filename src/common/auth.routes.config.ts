@@ -1,6 +1,7 @@
-import Joi, { ValidationResult } from "joi";
+import Joi, {ValidationResult} from "joi";
 import jwt from "jsonwebtoken";
 import express from "express";
+
 const publicURL = [
     "/user/login",
     "/user/registration",
@@ -65,13 +66,11 @@ export default function ValidateAuthRoute(
             if (!email) {
                 throw error;
             }
-            const authUser = {
+            req['authUser'] = {
                 id,
                 email,
             };
-            req['authUser'] = authUser;
         }
     }
     next();
 }
-

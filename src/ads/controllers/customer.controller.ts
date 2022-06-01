@@ -1,29 +1,14 @@
-import express from "express";
-const AdsApiBaseController = require("./base.controller")
+import  express from "express";
+import AdsApiBaseController from "./base.controller";
 
-class AdsApiCustomerController extends AdsApiBaseController{
+export default class AdsApiCustomerController extends AdsApiBaseController{
     /**
      * for the controller. Will be required to create
      * an instance of the controller
      */
     constructor() {
         super();
-    }
-
-    /**
-     *
-     * @param req
-     * @param res
-     * @param next
-     * @returns get accessible customer from ads api
-     *
-     */
-    async getCustomer(
-        req: express.Request,
-        res: express.Response,
-        next: express.NextFunction
-    ) {
-        return super.getCustomer(req, res, next)
+        this.getCustomerAllClients = this.getCustomerAllClients.bind(this)
     }
 
     /**
@@ -50,7 +35,7 @@ class AdsApiCustomerController extends AdsApiBaseController{
      * @returns getAllClients by API route call
      *
      */
-    async getAllClients(
+    async getCustomerAllClients(
         req: express.Request,
         res: express.Response,
         next: express.NextFunction
@@ -59,5 +44,3 @@ class AdsApiCustomerController extends AdsApiBaseController{
         res.json(data);
     };
 }
-
-module.exports = AdsApiCustomerController

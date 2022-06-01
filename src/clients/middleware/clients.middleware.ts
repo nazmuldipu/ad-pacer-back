@@ -13,8 +13,7 @@ class ClientMiddleware {
         if (
             req.body &&
             req.body.remoteClientId &&
-            req.body.name &&
-            req.body.teamEmails.length
+            req.body.name
         ) {
             next();
         } else {

@@ -1,74 +1,17 @@
 import express from "express";
 import clientService from "../services/clients.service";
-const AdsApiBaseController = require("../../ads/controllers/base.controller")
+import AdsApiBaseController from "../../ads/controllers/base.controller";
 const adsApiBaseCtrl = new AdsApiBaseController();
-import axios from "axios";
-import UsersMiddleware from "../../users/middleware/users.middleware";
-import usersService from "../../users/services/users.service";
-
-// import argon2 from "argon2";
 import debug from "debug";
 import { ClientDto } from "../dto/client.dto";
 import { Customer, CustomerClient } from "../dto/customer.dto";
 import { filterUpdateAbleModelKeys } from "../../common/utils/utils";
-import { google } from "googleapis";
 import { Client } from "../models";
-import { UserDto } from "../../users/dto/user.dto";
-import UsersController from "../../users/controllers/users.controller";
 
 const log: debug.IDebugger = debug("app:client-controller");
 
-const getRedirectURL = ({ hostname }) => {
-    return process.env.REDIRECT_URL;
-    // return 'http://localhost:3000'
-};
-const decodeAuthCredentials = async (token) => {
-    const url = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`;
-    const result = await axios.get(url);
-    return result.data;
-};
-
-class ClientController {
-    async oAuthClient(
-        req: express.Request,
-        res: express.Response,
-        next: express.NextFunction
-    ) {
-        try {
-            const oauth2client = new google.auth.OAuth2(
-                process.env.CLIENT_ID,
-                process.env.CLIENT_SECRET,
-                getRedirectURL(req)
-            );
-            const { tokens } = await oauth2client.getToken(req.body.code);
-            const user = await decodeAuthCredentials(tokens.access_token);
-            const isValidEmail = await UsersMiddleware.validateEmail(
-                user.email
-            );
-
-            req.body.email = user.email;
-            req.body.refreshToken = tokens.refresh_token;
-
-            if (!isValidEmail) {
-                req.body.name = user.name;
-                const modelObj = await usersService.create(req.body);
-            }
-            const { accessToken, userObj } = await UsersController.login(
-                req,
-                res,
-                next
-            );
-            user.accessToken = accessToken;
-            user.refreshToken = userObj.refreshToken;
-            user.loginUserId = userObj.id;
-
-            res.json({ ...tokens, user });
-        } catch (err) {
-            next(err);
-        }
-    }
-
-    async clietSettings(
+export default class ClientController {
+    async clientSettings(
         req: express.Request,
         res: express.Response,
         next: express.NextFunction
@@ -100,24 +43,27 @@ class ClientController {
             res.status(500).json("Server Error");
         }
     }
-    async createClietSettings(
+
+    async createClientSettings(
         req: express.Request,
         res: express.Response,
         next: express.NextFunction
     ) {
         try {
             const remoteClientId = req.body.remoteClientId;
-            const item = await clientService.getClientByRemoteClientId(
+            let item = await clientService.getClientByRemoteClientId(
                 remoteClientId
             );
 
             if (item) {
-                let Obj: ClientDto = {} as ClientDto; //filterUpdateAbleModelKeys(item, req) as ClientDto;
-                Obj["updatedByUserId"] = req["authUser"]["id"];
+                const keys = Object.keys(req.body)
+                for (let i =0; i < keys.length; i++) {
+                    item[keys[i]] = req.body[keys[i]];
+                }
                 res.status(200).json(await item.save());
             } else {
                 const modelObj: Client = new Client(req.body);
-                modelObj["createdByUserId"] = req["authUser"]["id"];
+                modelObj["createdByUserId"] = req["authUser"] ? req["authUser"]["id"] : null;
                 await modelObj.save();
                 res.status(201).json(modelObj);
             }
@@ -126,6 +72,7 @@ class ClientController {
             next(error);
         }
     }
+
     async listClient(req: express.Request, res: express.Response) {
         const client = await clientService.list();
         res.status(200).send(client);
@@ -171,5 +118,3 @@ class ClientController {
         res.status(204).send("");
     }
 }
-
-export default new ClientController();
