@@ -5,7 +5,6 @@ import axios from "axios";
 import  moment from "moment-timezone";
 import {CampaignBudgetSchedule} from "../models";
 import {User} from '../../users/models'
-import {filterUpdateAbleModelKeys} from "../../common/utils/utils";
 import CampaignAccountingController from '../../campaign-accounting/controllers/campaign-accounting.controller';
 const campaignAccountingCtrl = new CampaignAccountingController();
 import AdsApiHelperNewController from '../../ads/controllers/helper.controller';
@@ -18,8 +17,6 @@ const adsApiBaseCtrl = new AdsApiBaseController();
 import {getBudgetMutableURL, getCampaignCriteriaMutableURL} from "../../common/utils/googleAdsQuery";
 
 import  dotenv from "dotenv";
-import {CampaignBudgetScheduleDto} from "../dto/campaign-budget-schedule.dto";
-import CampaignBudgetScheduleDao from "../daos/campaign-budget-schedule.dao";
 
 dotenv.config();
 
